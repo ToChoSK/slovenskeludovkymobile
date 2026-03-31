@@ -3,6 +3,7 @@
     "name": "Slovenske Ludovky Mobile",
     "slug": "slovenskeludovkymobile",
     "scheme": "slovenskeludovkymobile",
+    "owner": "tochosk",
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
@@ -14,6 +15,11 @@
     ],
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "efdeac7f-c2b8-4973-998d-52c54f2d6dbf"
+      }
+    }
   }
 }
