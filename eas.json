@@ -9,6 +9,12 @@
       "distribution": "internal"
     },
     "preview": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "preview-device": {
       "distribution": "internal"
     },
     "production": {
