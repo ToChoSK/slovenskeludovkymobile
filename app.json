@@ -13,6 +13,16 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tochosk.slovenskeludovky"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#fffaf2"
+      },
+      "package": "com.tochosk.slovenskeludovky"
+    },
     "plugins": [
       "expo-router"
     ],
