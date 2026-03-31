@@ -117,6 +117,15 @@ export interface Song extends SongDoc {
   docId?: string
 }
 
+export interface SongCatalogItem {
+  id: number
+  title: string
+  obec: string | null
+  region: string | null
+  favoriteCount: number
+  viewCount: number
+}
+
 export interface AlbumDoc {
   ownerUserId: string
   title: string
@@ -146,7 +155,19 @@ export interface OfflineDatasetMeta {
 }
 
 export interface OfflineDatasetBundle {
-  songs: Song[]
+  songs: SongCatalogItem[]
   metadata: MetadataAllSongsDoc
   meta: OfflineDatasetMeta
+}
+
+export type OfflineSongOverrides = Record<string, Song | null>
+
+export type DatasetVersionStatus = "checking" | "current" | "outdated" | "unknown" | "error"
+
+export interface DatasetVersionInfo {
+  status: DatasetVersionStatus
+  checkedAt?: string | null
+  remoteEtag?: string | null
+  remoteLastModified?: string | null
+  message?: string | null
 }

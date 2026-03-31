@@ -22,8 +22,6 @@ import { db } from "@/lib/firebase"
 import type {
   Album,
   AlbumDoc,
-  AllSongsRow,
-  MetadataAllSongsDoc,
   MetadataRolePrivilegesDoc,
   NextSong,
   PrivilegeDefinition,
@@ -31,7 +29,6 @@ import type {
   Song,
   SongDoc,
   SongTextVersion,
-  StoredMetadataAllSongsDoc,
   User,
   UserDoc,
   UserRole,
@@ -134,101 +131,6 @@ function toAlbum(id: string, data: AlbumDoc): Album {
   return { id, ...data }
 }
 
-function decodeStoredAllSongsPayload(data: StoredMetadataAllSongsDoc | undefined): AllSongsRow[] {
-  if (!data) return []
-
-  if (typeof data.payload === "string" && data.payload.length > 0) {
-    try {
-      const parsed = JSON.parse(data.payload) as {
-        regions?: string[]
-        obce?: string[]
-        ids?: number[]
-        titles?: string[]
-        regionIndexes?: number[]
-        obecIndexes?: number[]
-        favoriteCounts?: number[]
-        viewCounts?: number[]
-      }
-      const regions = Array.isArray(parsed.regions) ? parsed.regions.filter((item): item is string => typeof item === "string") : []
-      const obce = Array.isArray(parsed.obce) ? parsed.obce.filter((item): item is string => typeof item === "string") : []
-      if (!Array.isArray(parsed.ids) || !Array.isArray(parsed.titles)) return []
-      return parsed.ids
-        .map((id, index): AllSongsRow | null => {
-          const title = parsed.titles?.[index]
-          if (typeof id !== "number" || typeof title !== "string" || !title.length) return null
-          const regionIndex = parsed.regionIndexes?.[index]
-          const obecIndex = parsed.obecIndexes?.[index]
-          return {
-            i: id,
-            t: title,
-            r: typeof regionIndex === "number" && regionIndex >= 0 ? regions[regionIndex] ?? null : null,
-            o: typeof obecIndex === "number" && obecIndex >= 0 ? obce[obecIndex] ?? null : null,
-            f: typeof parsed.favoriteCounts?.[index] === "number" ? parsed.favoriteCounts[index] : 0,
-            v: typeof parsed.viewCounts?.[index] === "number" ? parsed.viewCounts[index] : 0,
-          }
-        })
-        .filter((row): row is AllSongsRow => !!row)
-    } catch {
-      return []
-    }
-  }
-
-  if (Array.isArray(data.rows)) return data.rows
-  return []
-}
-
-function encodeStoredAllSongsPayload(rows: AllSongsRow[]): string {
-  const regions: string[] = []
-  const obce: string[] = []
-  const regionIndexes: number[] = []
-  const obecIndexes: number[] = []
-  const favoriteCounts: number[] = []
-  const viewCounts: number[] = []
-  const ids: number[] = []
-  const titles: string[] = []
-  const regionMap = new Map<string, number>()
-  const obecMap = new Map<string, number>()
-
-  const pushIndexedValue = (map: Map<string, number>, list: string[], value: string | null) => {
-    if (value == null) return -1
-    const normalized = String(value).trim()
-    if (!normalized) return -1
-    if (map.has(normalized)) return map.get(normalized) ?? -1
-    const nextIndex = list.length
-    list.push(normalized)
-    map.set(normalized, nextIndex)
-    return nextIndex
-  }
-
-  for (const row of rows) {
-    ids.push(row.i)
-    titles.push(row.t)
-    regionIndexes.push(pushIndexedValue(regionMap, regions, row.r))
-    obecIndexes.push(pushIndexedValue(obecMap, obce, row.o))
-    favoriteCounts.push(row.f)
-    viewCounts.push(row.v)
-  }
-
-  return JSON.stringify({ regions, obce, ids, titles, regionIndexes, obecIndexes, favoriteCounts, viewCounts })
-}
-
-function songToMetadataRow(song: Pick<SongDoc, "id" | "title" | "region" | "obec" | "favoriteCount" | "viewCount">): AllSongsRow {
-  return { i: song.id, t: song.title, r: song.region, o: song.obec, f: song.favoriteCount, v: song.viewCount }
-}
-
-function upsertMetadataAllSongsRow(data: StoredMetadataAllSongsDoc | undefined, row: AllSongsRow): StoredMetadataAllSongsDoc {
-  const rows = decodeStoredAllSongsPayload(data)
-  const index = rows.findIndex((item) => item.i === row.i)
-  if (index >= 0) rows[index] = row
-  else rows.push(row)
-  return { count: rows.length, payload: encodeStoredAllSongsPayload(rows) }
-}
-
-function removeMetadataAllSongsRow(data: StoredMetadataAllSongsDoc | undefined, songId: number): StoredMetadataAllSongsDoc {
-  const rows = decodeStoredAllSongsPayload(data).filter((item) => item.i !== songId)
-  return { count: rows.length, payload: encodeStoredAllSongsPayload(rows) }
-}
-
 async function getSongSnapshotByNumericId(songId: number) {
   const snap = await getDocs(query(songsCollection(), where("id", "==", songId), limit(1)))
   return snap.docs[0] ?? null
@@ -277,16 +179,16 @@ export async function getUserById(userId: string): Promise<User | null> {
   return toUser(snap.id, snap.data() as UserDoc)
 }
 
-export async function getAllUsers(): Promise<User[]> {
+async function getAllUsers(): Promise<User[]> {
   const snap = await getDocs(query(usersCollection(), orderBy("email"), limit(200)))
   return snap.docs.map((item) => toUser(item.id, item.data() as UserDoc))
 }
 
-export async function updateUserRole(userId: string, role: UserRole) {
+async function updateUserRole(userId: string, role: UserRole) {
   await updateDoc(doc(requireDb(), "users", userId), { role, updatedAt: serverTimestamp() })
 }
 
-export async function deleteUser(userId: string) {
+async function deleteUser(userId: string) {
   const firestore = requireDb()
   const [userRef, songsSnap] = await Promise.all([doc(firestore, "users", userId), getDocs(query(songsCollection(), where("userAddedId", "==", userId)))])
   const batch = writeBatch(firestore)
@@ -314,24 +216,17 @@ export async function getAllRolePrivileges(): Promise<MetadataRolePrivilegesDoc>
   }
 }
 
-export async function updateRolePrivileges(role: "anonymous" | "guest" | "subscriber" | "admin", privileges: PrivilegeId[]) {
+async function updateRolePrivileges(role: "anonymous" | "guest" | "subscriber" | "admin", privileges: PrivilegeId[]) {
   await updateDoc(doc(requireDb(), "metadata", "rolePrivileges"), { [role]: Array.from(new Set(privileges)) })
 }
 
-export async function getMetadataAllSongs(): Promise<MetadataAllSongsDoc> {
-  const snap = await getDoc(doc(requireDb(), "metadata", "allSongs"))
-  const data = snap.data() as StoredMetadataAllSongsDoc | undefined
-  const rows = decodeStoredAllSongsPayload(data)
-  return { count: rows.length, rows }
-}
-
-export async function getSongById(songId: number): Promise<Song | null> {
+async function getSongById(songId: number): Promise<Song | null> {
   const snap = await getSongSnapshotByNumericId(songId)
   if (!snap) return null
   return toSong(snap.id, normalizeSongDoc(snap.data()))
 }
 
-export async function getSongsByIds(songIds: number[]): Promise<Song[]> {
+async function getSongsByIds(songIds: number[]): Promise<Song[]> {
   return (await Promise.all(songIds.map((songId) => getSongById(songId)))).filter((item): item is Song => !!item)
 }
 
@@ -346,9 +241,7 @@ export async function createSong(input: {
   const nextId = await getNextSongId()
   const firestore = requireDb()
   const ref = doc(songsCollection())
-  const metadataRef = doc(firestore, "metadata", "allSongs")
   await runTransaction(firestore, async (transaction) => {
-    const metadataDoc = await transaction.get(metadataRef)
     transaction.set(ref, {
       creationTime: serverTimestamp(),
       favoriteCount: 0,
@@ -362,18 +255,6 @@ export async function createSong(input: {
       userAddedId: input.userAddedId,
       viewCount: 0,
     })
-    transaction.set(
-      metadataRef,
-      upsertMetadataAllSongsRow(metadataDoc.data() as StoredMetadataAllSongsDoc | undefined, {
-        i: nextId,
-        t: input.title,
-        r: input.region,
-        o: input.obec,
-        f: 0,
-        v: 0,
-      }),
-      { merge: false },
-    )
     if (input.userAddedId) {
       transaction.update(doc(firestore, "users", input.userAddedId), {
         songsAdded: arrayUnion(nextId),
@@ -388,37 +269,17 @@ export async function updateSong(songId: number, patch: Partial<Omit<SongDoc, "i
   const snap = await getSongSnapshotByNumericId(songId)
   if (!snap) throw new Error("Piesen sa nenasla.")
   const firestore = requireDb()
-  const metadataRef = doc(firestore, "metadata", "allSongs")
   await runTransaction(firestore, async (transaction) => {
-    const [songDoc, metadataDoc] = await Promise.all([transaction.get(snap.ref), transaction.get(metadataRef)])
+    const songDoc = await transaction.get(snap.ref)
     if (!songDoc.exists()) throw new Error("Piesen sa nenasla.")
-    const currentSong = normalizeSongDoc(songDoc.data())
-    const nextSong: SongDoc = {
-      ...currentSong,
-      ...patch,
-      id: currentSong.id,
-      creationTime: currentSong.creationTime,
-      userAddedId: currentSong.userAddedId,
-    }
     transaction.update(snap.ref, patch)
-    transaction.set(
-      metadataRef,
-      upsertMetadataAllSongsRow(metadataDoc.data() as StoredMetadataAllSongsDoc | undefined, songToMetadataRow(nextSong)),
-      { merge: false },
-    )
   })
 }
 
 export async function deleteSong(songId: number) {
   const snap = await getSongSnapshotByNumericId(songId)
   if (!snap) return
-  const firestore = requireDb()
-  const metadataRef = doc(firestore, "metadata", "allSongs")
-  await runTransaction(firestore, async (transaction) => {
-    const metadataDoc = await transaction.get(metadataRef)
-    transaction.delete(snap.ref)
-    transaction.set(metadataRef, removeMetadataAllSongsRow(metadataDoc.data() as StoredMetadataAllSongsDoc | undefined, songId), { merge: false })
-  })
+  await deleteDoc(snap.ref)
 }
 
 export async function addTextVersion(songId: number, text: string) {
@@ -451,9 +312,8 @@ export async function toggleFavoriteSong(userId: string, songId: number) {
   if (!songSnap) throw new Error("Piesen sa nenasla.")
   const firestore = requireDb()
   const userRef = doc(firestore, "users", userId)
-  const metadataRef = doc(firestore, "metadata", "allSongs")
   await runTransaction(firestore, async (transaction) => {
-    const [userDoc, songDoc, metadataDoc] = await Promise.all([transaction.get(userRef), transaction.get(songSnap.ref), transaction.get(metadataRef)])
+    const [userDoc, songDoc] = await Promise.all([transaction.get(userRef), transaction.get(songSnap.ref)])
     if (!userDoc.exists() || !songDoc.exists()) throw new Error("Udaje sa nenasli.")
     const user = userDoc.data() as UserDoc
     const song = normalizeSongDoc(songDoc.data())
@@ -464,37 +324,13 @@ export async function toggleFavoriteSong(userId: string, songId: number) {
       updatedAt: serverTimestamp(),
     })
     transaction.update(songSnap.ref, { favoriteCount: nextFavoriteCount })
-    transaction.set(
-      metadataRef,
-      upsertMetadataAllSongsRow(
-        metadataDoc.data() as StoredMetadataAllSongsDoc | undefined,
-        songToMetadataRow({ ...song, favoriteCount: nextFavoriteCount }),
-      ),
-      { merge: false },
-    )
   })
 }
 
 export async function incrementSongViewCount(songId: number) {
   const snap = await getSongSnapshotByNumericId(songId)
   if (!snap) return
-  const firestore = requireDb()
-  const metadataRef = doc(firestore, "metadata", "allSongs")
-  await runTransaction(firestore, async (transaction) => {
-    const [songDoc, metadataDoc] = await Promise.all([transaction.get(snap.ref), transaction.get(metadataRef)])
-    if (!songDoc.exists()) return
-    const song = normalizeSongDoc(songDoc.data())
-    const nextViewCount = song.viewCount + 1
-    transaction.update(snap.ref, { viewCount: increment(1) })
-    transaction.set(
-      metadataRef,
-      upsertMetadataAllSongsRow(
-        metadataDoc.data() as StoredMetadataAllSongsDoc | undefined,
-        songToMetadataRow({ ...song, viewCount: nextViewCount }),
-      ),
-      { merge: false },
-    )
-  })
+  await updateDoc(snap.ref, { viewCount: increment(1) })
 }
 
 export async function addNextSong(songId: number, nextSongId: number) {
@@ -547,16 +383,11 @@ export async function likeTextVersion(userId: string, songId: number, textVersio
   ])
 }
 
-export async function exportAllSongsIndex() {
-  const metadata = await getMetadataAllSongs()
-  return {
-    json: JSON.stringify(metadata, null, 2),
-    version: new Date().toISOString(),
-    count: metadata.count,
-  }
+async function exportAllSongsIndex() {
+  return { json: JSON.stringify({ count: 0, rows: [] }, null, 2), version: new Date().toISOString(), count: 0 }
 }
 
-export async function createAlbum(userId: string, input: { title: string; description: string | null }) {
+async function createAlbum(userId: string, input: { title: string; description: string | null }) {
   const firestore = requireDb()
   const ref = doc(albumsCollection())
   await setDoc(ref, {
@@ -579,18 +410,18 @@ export async function createAlbum(userId: string, input: { title: string; descri
   return ref.id
 }
 
-export async function getAlbumById(albumId: string): Promise<Album | null> {
+async function getAlbumById(albumId: string): Promise<Album | null> {
   const snap = await getDoc(doc(requireDb(), "albums", albumId))
   if (!snap.exists()) return null
   return toAlbum(snap.id, snap.data() as AlbumDoc)
 }
 
-export async function getUserAlbums(userId: string): Promise<Album[]> {
+async function getUserAlbums(userId: string): Promise<Album[]> {
   const snap = await getDocs(query(albumsCollection(), where("ownerUserId", "==", userId), orderBy("updatedAt", "desc"), limit(100)))
   return snap.docs.map((item) => toAlbum(item.id, item.data() as AlbumDoc))
 }
 
-export async function deleteAlbum(albumId: string, userId: string) {
+async function deleteAlbum(albumId: string, userId: string) {
   const firestore = requireDb()
   const batch = writeBatch(firestore)
   batch.delete(doc(firestore, "albums", albumId))
@@ -598,7 +429,7 @@ export async function deleteAlbum(albumId: string, userId: string) {
   await batch.commit()
 }
 
-export async function addSongToAlbum(albumId: string, songId: number) {
+async function addSongToAlbum(albumId: string, songId: number) {
   const album = await getAlbumById(albumId)
   if (!album || album.songIds.includes(songId)) return
   await updateDoc(doc(requireDb(), "albums", albumId), {
@@ -609,7 +440,7 @@ export async function addSongToAlbum(albumId: string, songId: number) {
   })
 }
 
-export async function removeSongFromAlbum(albumId: string, songId: number) {
+async function removeSongFromAlbum(albumId: string, songId: number) {
   const album = await getAlbumById(albumId)
   if (!album) return
   const nextSongIds = album.songIds.filter((id) => id !== songId)

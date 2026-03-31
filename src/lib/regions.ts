@@ -3,10 +3,8 @@ export const MAP_REGION_KEYS = [
   "gemer",
   "hont",
   "horehronie",
-  "hornepovazie",
   "kysuce",
   "liptov",
-  "malohont",
   "myjava",
   "novohrad",
   "orava",
@@ -31,10 +29,8 @@ export const REGION_META: Record<RegionKey, { label: string; color: string }> = 
   gemer: { label: "Gemer", color: "#f97316" },
   hont: { label: "Hont", color: "#16a34a" },
   horehronie: { label: "Horehronie", color: "#0f766e" },
-  hornepovazie: { label: "Horne Povazie", color: "#2563eb" },
   kysuce: { label: "Kysuce", color: "#0284c7" },
   liptov: { label: "Liptov", color: "#22c55e" },
-  malohont: { label: "Malohont", color: "#65a30d" },
   myjava: { label: "Myjava", color: "#3b82f6" },
   novohrad: { label: "Novohrad", color: "#14b8a6" },
   orava: { label: "Orava", color: "#06b6d4" },
@@ -57,8 +53,8 @@ export const REGION_META: Record<RegionKey, { label: string; color: string }> = 
 
 const REGION_GROUPS: Record<(typeof EXTRA_REGION_KEYS)[number], readonly (typeof MAP_REGION_KEYS)[number][]> = {
   vychod: ["abov", "gemer", "saris", "spis", "zemplin"],
-  stred: ["hont", "horehronie", "kysuce", "liptov", "malohont", "novohrad", "orava", "podpolanie", "pohronie", "turiec"],
-  zapad: ["hornepovazie", "myjava", "podunajsko", "ponitrie", "povazie", "tekov", "zahorie"],
+  stred: ["hont", "horehronie", "kysuce", "liptov", "novohrad", "orava", "podpolanie", "pohronie", "turiec"],
+  zapad: ["myjava", "podunajsko", "ponitrie", "povazie", "tekov", "zahorie"],
   slovensko: MAP_REGION_KEYS,
 }
 

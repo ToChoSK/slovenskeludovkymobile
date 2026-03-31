@@ -7,6 +7,7 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "icon": "./assets/ludovkylogo.png",
     "experiments": {
       "typedRoutes": true
     },
@@ -18,13 +19,20 @@
         "usesNonExemptEncryption": false
       },
       "supportsTablet": true,
-      "bundleIdentifier": "com.tochosk.slovenskeludovky"
+      "bundleIdentifier": "com.tochosk.slovenskeludovky",
+      "icon": "./assets/ludovkylogo.png"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#fffaf2"
+        "foregroundImage": "./assets/ludovkylogo.png",
+        "backgroundColor": "#eef7fd"
       },
       "package": "com.tochosk.slovenskeludovky"
+    },
+    "splash": {
+      "image": "./assets/ludovkylogo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#eef7fd"
     },
     "plugins": [
       "expo-router"

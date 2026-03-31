@@ -1,26 +1,14 @@
 import { useState } from "react"
 import { router } from "expo-router"
 import { Button, Card, Field, Heading, Screen, Subtle } from "@/components/ui"
-import { useAppMode } from "@/providers/AppModeProvider"
 import { useAuth } from "@/providers/AuthProvider"
 
 export default function RegisterScreen() {
-  const { mode } = useAppMode()
   const { signUp, authWarning } = useAuth()
   const [nick, setNick] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
-
-  if (mode !== "online") {
-    return (
-      <Screen>
-        <Card>
-          <Heading>Registracia je dostupna len online</Heading>
-        </Card>
-      </Screen>
-    )
-  }
 
   return (
     <Screen>

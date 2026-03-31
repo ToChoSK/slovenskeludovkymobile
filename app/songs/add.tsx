@@ -1,15 +1,13 @@
-import { Timestamp } from "firebase/firestore"
 import { useState } from "react"
 import { router } from "expo-router"
 import { Button, Card, Field, Heading, Screen, Subtle } from "@/components/ui"
-import { useAppMode } from "@/providers/AppModeProvider"
-import { useAuth } from "@/providers/AuthProvider"
 import { useHasPrivilege } from "@/lib/privileges"
-import { createSong } from "@/services/firestore"
+import { useAuth } from "@/providers/AuthProvider"
+import { useSongs } from "@/providers/SongsProvider"
 
 export default function AddSongScreen() {
-  const { mode } = useAppMode()
-  const { user } = useAuth()
+  const { user, refreshUser } = useAuth()
+  const { createSong } = useSongs()
   const canAddSong = useHasPrivilege(user, "add_song")
   const [title, setTitle] = useState("")
   const [obec, setObec] = useState("")
@@ -17,12 +15,12 @@ export default function AddSongScreen() {
   const [links, setLinks] = useState("")
   const [textVersion, setTextVersion] = useState("")
 
-  if (mode !== "online" || !user || !canAddSong) {
+  if (!user || !canAddSong) {
     return (
       <Screen>
         <Card>
           <Heading>Pridanie piesne nie je dostupne</Heading>
-          <Subtle>Vyplna len online rezim s opravnenim `add_song`.</Subtle>
+          <Subtle>Vyplna len pre prihlasene roly s opravnenim `add_song`.</Subtle>
         </Card>
       </Screen>
     )
@@ -45,9 +43,12 @@ export default function AddSongScreen() {
               obec: obec.trim() || null,
               region: region.trim() || null,
               links: links.split("\n").map((line) => line.trim()).filter(Boolean),
-              textVersions: textVersion.trim() ? [{ id: 1, creationTime: Timestamp.now(), likes: 0, text: textVersion.trim() }] : [],
+              text: textVersion.trim(),
               userAddedId: user.id,
-            }).then((songId) => router.replace(`/songs/${songId}`))
+            }).then(async (songId) => {
+              await refreshUser()
+              router.replace(`/songs/${songId}`)
+            })
           }
         />
       </Card>

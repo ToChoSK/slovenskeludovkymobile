@@ -1,24 +1,55 @@
 import type { AllSongsRow, Song } from "@/types"
 
-export function normalizeText(input: unknown): string {
-  return String(input ?? "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/[.,;:!?'"(){}\[\]\\/_-]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .replace(/y/g, "i")
-    .replace(/ch/g, "h")
-    .replace(/dz/g, "c")
-    .replace(/b/g, "p")
-    .replace(/d/g, "t")
-    .replace(/z/g, "s")
-    .replace(/g/g, "k")
-    .replace(/v/g, "f")
+export type SongSearchIndexEntry = {
+  songId: number
+  title: string
+  titleKey: string
+  region: string | null
+  regionKey: string
+  obec: string | null
+  obecKey: string
+  fulltextKey: string
 }
 
-export function songToMetadataRow(song: Song): AllSongsRow {
+export type AsyncSongSearchProgress = {
+  processed: number
+  total: number
+  ratio: number
+}
+
+const PLACEHOLDER_DZH = "q"
+const PLACEHOLDER_DZ = "w"
+const PLACEHOLDER_CH = "x"
+
+function canonicalizePhonetics(input: string): string {
+  return input
+    .replaceAll(PLACEHOLDER_DZH, "c")
+    .replaceAll(PLACEHOLDER_DZ, "c")
+    .replaceAll(PLACEHOLDER_CH, "h")
+    .replace(/[yi]/g, "i")
+    .replace(/[bp]/g, "p")
+    .replace(/[dt]/g, "t")
+    .replace(/[zs]/g, "s")
+    .replace(/[gk]/g, "k")
+    .replace(/[vf]/g, "f")
+}
+
+export function normalizeSearchText(input: unknown): string {
+  return canonicalizePhonetics(
+    String(input ?? "")
+      .toLowerCase()
+      .replaceAll("\u0064\u017e", PLACEHOLDER_DZH)
+      .replaceAll("dz", PLACEHOLDER_DZ)
+      .replaceAll("ch", PLACEHOLDER_CH)
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "")
+      .replace(/[^\p{L}\p{N}\s]+/gu, " ")
+      .replace(/\s+/g, " ")
+      .trim(),
+  )
+}
+
+export function songToMetadataRow(song: Pick<Song, "id" | "title" | "obec" | "region" | "favoriteCount" | "viewCount">): AllSongsRow {
   return {
     i: song.id,
     o: song.obec,
@@ -29,11 +60,77 @@ export function songToMetadataRow(song: Song): AllSongsRow {
   }
 }
 
+export function buildSongSearchIndex(songs: Song[]): SongSearchIndexEntry[] {
+  return songs.map((song) => ({
+    songId: song.id,
+    title: song.title,
+    titleKey: normalizeSearchText(song.title),
+    region: song.region,
+    regionKey: normalizeSearchText(song.region ?? ""),
+    obec: song.obec,
+    obecKey: normalizeSearchText(song.obec ?? ""),
+    fulltextKey: normalizeSearchText([song.title, song.region, song.obec, ...song.textVersions.map((version) => version.text)].filter(Boolean).join(" ")),
+  }))
+}
+
+export function findLiveTitleMatches(index: SongSearchIndexEntry[], query: string, limit = 8): SongSearchIndexEntry[] {
+  const normalizedQuery = normalizeSearchText(query)
+  if (!normalizedQuery) return []
+
+  const startsWith: SongSearchIndexEntry[] = []
+  const includes: SongSearchIndexEntry[] = []
+
+  for (const entry of index) {
+    if (entry.titleKey.startsWith(normalizedQuery)) {
+      startsWith.push(entry)
+    } else if (entry.titleKey.includes(normalizedQuery)) {
+      includes.push(entry)
+    }
+
+    if (startsWith.length + includes.length >= limit * 2) break
+  }
+
+  return [...startsWith, ...includes].slice(0, limit)
+}
+
+export async function searchSongsWithProgress(
+  index: SongSearchIndexEntry[],
+  query: string,
+  options?: {
+    signal?: { cancelled: boolean }
+    onProgress?: (progress: AsyncSongSearchProgress) => void
+    chunkSize?: number
+  },
+): Promise<number[]> {
+  const normalizedQuery = normalizeSearchText(query)
+  if (!normalizedQuery) return []
+
+  const chunkSize = options?.chunkSize ?? 220
+  const matches: number[] = []
+
+  for (let offset = 0; offset < index.length; offset += chunkSize) {
+    if (options?.signal?.cancelled) return []
+    const chunk = index.slice(offset, offset + chunkSize)
+
+    for (const entry of chunk) {
+      if (entry.fulltextKey.includes(normalizedQuery)) matches.push(entry.songId)
+    }
+
+    const processed = Math.min(offset + chunk.length, index.length)
+    options?.onProgress?.({
+      processed,
+      total: index.length,
+      ratio: index.length === 0 ? 1 : processed / index.length,
+    })
+
+    await new Promise((resolve) => setTimeout(resolve, 0))
+  }
+
+  return matches
+}
+
 export function matchesOfflineSong(song: Song, query: string): boolean {
-  const q = normalizeText(query)
+  const q = normalizeSearchText(query)
   if (!q) return true
-  if (normalizeText(song.title).includes(q)) return true
-  if (normalizeText(song.obec ?? "").includes(q)) return true
-  if (normalizeText(song.region ?? "").includes(q)) return true
-  return song.textVersions.some((version) => normalizeText(version.text).includes(q))
+  return normalizeSearchText([song.title, song.obec, song.region, ...song.textVersions.map((version) => version.text)].join(" ")).includes(q)
 }

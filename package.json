@@ -5,6 +5,9 @@
   "packageManager": "pnpm@10.32.1",
   "main": "expo-router/entry",
   "scripts": {
+    "preinstall": "node -e \"const ua=(process.env.npm_config_user_agent||'').toLowerCase(); if(!ua.includes('pnpm')) { console.error('This project uses pnpm only. Run: pnpm install'); process.exit(1); }\"",
+    "prepare:song-data": "node ./scripts/prepare-song-data.mjs",
+    "prepare:song-data:local": "set \"SONG_DATA_SOURCE=local\" && node ./scripts/prepare-song-data.mjs",
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -12,6 +15,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@expo/vector-icons": "^15.1.1",
     "@react-native-async-storage/async-storage": "^2.1.0",
     "expo": "~54.0.12",
     "expo-asset": "~12.0.9",
