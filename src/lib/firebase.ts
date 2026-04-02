@@ -5,7 +5,7 @@ import { getFirestore } from "firebase/firestore"
 import { Platform } from "react-native"
 import { FIREBASE_CONFIG } from "@/lib/config"
 
-const rnAuth = require("@firebase/auth") as {
+const rnAuth = require("firebase/auth") as {
   getAuth: typeof getAuthType
   getReactNativePersistence: (storage: typeof AsyncStorage) => unknown
   initializeAuth: typeof initializeAuthType
