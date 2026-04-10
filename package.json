@@ -8,6 +8,8 @@
     "preinstall": "node -e \"const ua=(process.env.npm_config_user_agent||'').toLowerCase(); if(!ua.includes('pnpm')) { console.error('This project uses pnpm only. Run: pnpm install'); process.exit(1); }\"",
     "prepare:song-data": "node ./scripts/prepare-song-data.mjs",
     "prepare:song-data:local": "set \"SONG_DATA_SOURCE=local\" && node ./scripts/prepare-song-data.mjs",
+    "update:preview": "eas update --channel preview",
+    "update:production": "eas update --channel production",
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",

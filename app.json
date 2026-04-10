@@ -5,9 +5,17 @@
     "scheme": "slovenskeludovkymobile",
     "owner": "tochosk",
     "version": "0.1.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "icon": "./assets/ludovkylogo.png",
+    "updates": {
+      "url": "https://u.expo.dev/efdeac7f-c2b8-4973-998d-52c54f2d6dbf",
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
     "experiments": {
       "typedRoutes": true
     },

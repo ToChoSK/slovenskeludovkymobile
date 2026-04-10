@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router"
-import { useEffect, useMemo, useState } from "react"
-import { FlatList, ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { startTransition, useDeferredValue, useEffect, useMemo, useState, useTransition } from "react"
+import { ActivityIndicator, FlatList, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import { Badge, Card, EmptyState, Field, SongCard, Subtle } from "@/components/ui"
 import { EXTRA_REGION_KEYS, MAP_REGION_KEYS, REGION_META, isRegionIncluded, type RegionKey } from "@/lib/regions"
 import { normalizeSearchText } from "@/lib/search"
@@ -22,6 +22,10 @@ export default function SongsScreen() {
   const [search, setSearch] = useState("")
   const [region, setRegion] = useState<"all" | string>("all")
   const [sortBy, setSortBy] = useState<SortBy>("views")
+  const [isSortPending, startSortTransition] = useTransition()
+  const deferredSearch = useDeferredValue(search)
+  const deferredRegion = useDeferredValue(region)
+  const deferredSortBy = useDeferredValue(sortBy)
 
   useEffect(() => {
     setRegion(typeof params.region === "string" && params.region.length > 0 ? params.region : "all")
@@ -32,14 +36,14 @@ export default function SongsScreen() {
   }, [params.query])
 
   const rows = useMemo(() => {
-    const q = normalizeSearchText(search)
+    const q = normalizeSearchText(deferredSearch)
     const filtered = songs.filter((song) => {
-      if (!isRegionIncluded(region, song.region)) return false
+      if (!isRegionIncluded(deferredRegion, song.region)) return false
       if (!q) return true
       return normalizeSearchText(`${song.title} ${song.region ?? ""} ${song.obec ?? ""}`).includes(q)
     })
 
-    const effectiveSortBy: SortBy = q ? "views" : sortBy
+    const effectiveSortBy: SortBy = q ? "views" : deferredSortBy
 
     return [...filtered].sort((a, b) => {
       const compare =
@@ -50,7 +54,7 @@ export default function SongsScreen() {
             : a.title.localeCompare(b.title, "sk", { sensitivity: "base" })
       return effectiveSortBy === "title" ? compare || a.id - b.id : -(compare || a.id - b.id)
     })
-  }, [songs, region, search, sortBy])
+  }, [songs, deferredRegion, deferredSearch, deferredSortBy])
 
   const nextSort: SortBy = sortBy === "views" ? "title" : sortBy === "title" ? "favorites" : "views"
   const header = (
@@ -65,7 +69,11 @@ export default function SongsScreen() {
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
           <Badge label={`${rows.length} vysledkov`} />
           <TouchableOpacity
-            onPress={() => setSortBy(nextSort)}
+            onPress={() =>
+              startSortTransition(() => {
+                setSortBy(nextSort)
+              })
+            }
             disabled={Boolean(search.trim())}
             style={{
               borderRadius: 999,
@@ -75,13 +83,28 @@ export default function SongsScreen() {
               paddingHorizontal: 14,
               paddingVertical: 9,
               opacity: search.trim() ? 0.7 : 1,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
             }}
           >
-            <Text style={{ color: "#17354d", fontWeight: "800" }}>Sort: {search.trim() ? SORT_LABELS.views : SORT_LABELS[sortBy]}</Text>
+            {isSortPending ? <ActivityIndicator size="small" color="#17354d" /> : null}
+            <Text style={{ color: "#17354d", fontWeight: "800" }}>
+              {isSortPending ? "Triedim..." : `Sort: ${search.trim() ? SORT_LABELS.views : SORT_LABELS[sortBy]}`}
+            </Text>
           </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingHorizontal: 2 }}>
-          <FilterChip label="Vsetky" active={region === "all"} onPress={() => setRegion("all")} color="#3b9ed8" />
+          <FilterChip
+            label="Vsetky"
+            active={region === "all"}
+            onPress={() =>
+              startTransition(() => {
+                setRegion("all")
+              })
+            }
+            color="#3b9ed8"
+          />
           {ALL_REGION_KEYS.map((key) => {
             const meta = REGION_META[key as RegionKey]
             return (
@@ -90,12 +113,24 @@ export default function SongsScreen() {
                 label={meta.label}
                 active={region === key}
                 color={meta.color}
-                onPress={() => setRegion(region === key ? "all" : key)}
+                onPress={() =>
+                  startTransition(() => {
+                    setRegion(region === key ? "all" : key)
+                  })
+                }
               />
             )
           })}
         </ScrollView>
-        <Field value={search} onChangeText={setSearch} placeholder="Filtruj podla nazvu, regionu alebo obce..." />
+        <Field
+          value={search}
+          onChangeText={(value) =>
+            startTransition(() => {
+              setSearch(value)
+            })
+          }
+          placeholder="Filtruj podla nazvu, regionu alebo obce..."
+        />
       </Card>
 
     </View>
