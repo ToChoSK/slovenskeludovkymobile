@@ -173,6 +173,7 @@ async function fetchLatestSongs(cdnUrl) {
 async function main() {
   const allSongsPath = path.join(rootDir, "allsongs.json")
   const catalogPath = path.join(rootDir, "songs.catalog.json")
+  const datasetMetaPath = path.join(rootDir, "songs.dataset-meta.json")
   const searchIndexPath = path.join(rootDir, "songs.search-index.json")
   const sourceMode = process.env.SONG_DATA_SOURCE === "local" ? "local" : "cdn"
 
@@ -191,8 +192,14 @@ async function main() {
 
   const catalog = songs.map(toCatalogSong)
   const searchIndex = songs.map(toSearchIndexEntry)
+  const datasetMeta = {
+    count: songs.length,
+    sourceMode,
+    version: new Date().toISOString(),
+  }
 
   await writeFile(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`, "utf8")
+  await writeFile(datasetMetaPath, `${JSON.stringify(datasetMeta, null, 2)}\n`, "utf8")
   await writeFile(searchIndexPath, `${JSON.stringify(searchIndex, null, 2)}\n`, "utf8")
   await writeDetailChunks(songs)
 

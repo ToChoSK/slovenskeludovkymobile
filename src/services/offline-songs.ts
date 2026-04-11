@@ -1,5 +1,6 @@
 import * as FileSystem from "expo-file-system/legacy"
 import bundledCatalog from "../../songs.catalog.json"
+import bundledDatasetMeta from "../../songs.dataset-meta.json"
 import { buildSongSearchIndex, songToMetadataRow, type SongSearchIndexEntry } from "@/lib/search"
 import type { MetadataAllSongsDoc, OfflineDatasetBundle, OfflineDatasetMeta, OfflineSongOverrides, Song, SongCatalogItem } from "@/types"
 
@@ -75,6 +76,7 @@ async function writeFile(path: string, value: unknown) {
 
 function buildLocalMeta(previous?: OfflineDatasetMeta | null): OfflineDatasetMeta {
   return {
+    bundledVersion: previous?.bundledVersion ?? bundledDatasetMeta.version ?? null,
     downloadedAt: previous?.downloadedAt ?? new Date().toISOString(),
     etag: previous?.etag ?? null,
     lastModified: previous?.lastModified ?? null,
@@ -157,7 +159,11 @@ export async function ensureOfflineDataset(): Promise<OfflineDatasetBundle> {
   const [cachedMeta, overrides] = await Promise.all([readFile<OfflineDatasetMeta>(META_PATH), readOverrides()])
   const baseSongs = normalizeCatalogSongs(bundledCatalog as unknown as any[])
   const songs = applyOverridesToCatalog(baseSongs, overrides)
-  const meta = cachedMeta ?? { downloadedAt: new Date().toISOString(), source: "bundled" as const }
+  const meta = cachedMeta ?? {
+    bundledVersion: bundledDatasetMeta.version ?? null,
+    downloadedAt: new Date().toISOString(),
+    source: "bundled" as const,
+  }
   return { songs, metadata: toMetadata(songs), meta }
 }
 

@@ -9,7 +9,7 @@ import type { User } from "@/types"
 
 export default function ProfileScreen() {
   const { user, loading, logout } = useAuth()
-  const { getSongs } = useSongs()
+  const { getSongs, offlineMeta } = useSongs()
 
   if (loading) {
     return (
@@ -35,17 +35,19 @@ export default function ProfileScreen() {
     )
   }
 
-  return <LoggedProfile user={user} logout={logout} getSongs={getSongs} />
+  return <LoggedProfile user={user} logout={logout} getSongs={getSongs} offlineMeta={offlineMeta} />
 }
 
 function LoggedProfile({
   user,
   logout,
   getSongs,
+  offlineMeta,
 }: {
   user: User
   logout: () => Promise<void>
   getSongs: (songIds: number[]) => Promise<any[]>
+  offlineMeta: ReturnType<typeof useSongs>["offlineMeta"]
 }) {
   const canAddSong = useHasPrivilege(user, "add_song")
   const canAddTextVersion = useHasPrivilege(user, "add_text_version")
@@ -57,6 +59,9 @@ function LoggedProfile({
   const canLikeTextVersion = useHasPrivilege(user, "like_text_version")
   const canSelectNextSong = useHasPrivilege(user, "select_next_song")
   const [favorites, setFavorites] = useState<Awaited<ReturnType<typeof getSongs>>>([])
+  const dataVersion = offlineMeta?.bundledVersion ?? offlineMeta?.lastModified ?? offlineMeta?.etag ?? "Neznama"
+  const dataSourceLabel = offlineMeta?.source === "cdn" ? "cdn cache" : "app bundle"
+  const installedAtLabel = formatDateTime(offlineMeta?.downloadedAt)
 
   useEffect(() => {
     let alive = true
@@ -82,6 +87,19 @@ function LoggedProfile({
 
   return (
     <Screen>
+      <Card style={{ gap: 10, paddingVertical: 14 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <View style={{ flex: 1, gap: 3 }}>
+            <Text style={{ fontSize: 12, fontWeight: "800", letterSpacing: 0.8, color: "#2f8fcd", textTransform: "uppercase" }}>Verzia dat</Text>
+            <Text style={{ fontSize: 18, fontWeight: "900", color: "#13324a" }}>{dataVersion}</Text>
+          </View>
+          <Badge label={dataSourceLabel} color="#2f8fcd" />
+        </View>
+        <Subtle>
+          Nahrate v zariadeni: {installedAtLabel}
+        </Subtle>
+      </Card>
+
         <HeroCard>
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
             <View style={{ flex: 1, gap: 6 }}>
@@ -136,4 +154,16 @@ function LoggedProfile({
       </Card>
     </Screen>
   )
+}
+
+function formatDateTime(value?: string | null) {
+  if (!value) return "nezname"
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+
+  return new Intl.DateTimeFormat("sk-SK", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date)
 }

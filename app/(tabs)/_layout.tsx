@@ -1,22 +1,26 @@
 import { Tabs } from "expo-router"
+import { Ionicons } from "@expo/vector-icons"
 import { Text, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { useHasPrivilege } from "@/lib/privileges"
 import { useAuth } from "@/providers/AuthProvider"
 
-function TabIcon({ label, focused }: { label: string; focused: boolean }) {
+function TabIcon({ label, icon, focused }: { label: string; icon: keyof typeof Ionicons.glyphMap; focused: boolean }) {
   return (
     <View
       style={{
-        width: 48,
-        height: 32,
-        borderRadius: 16,
+        minWidth: 62,
+        height: 42,
+        paddingHorizontal: 12,
+        borderRadius: 21,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: focused ? "rgba(245,252,255,0.2)" : "transparent",
+        gap: 2,
+        backgroundColor: focused ? "rgba(245,252,255,0.16)" : "transparent",
       }}
     >
-      <Text style={{ color: focused ? "#f4fbff" : "rgba(232,247,255,0.74)", fontSize: 11, fontWeight: "800", letterSpacing: 0.8 }}>
+      <Ionicons name={icon} size={16} color={focused ? "#f4fbff" : "rgba(232,247,255,0.78)"} />
+      <Text style={{ color: focused ? "#f4fbff" : "rgba(232,247,255,0.78)", fontSize: 10, fontWeight: "800" }}>
         {label}
       </Text>
     </View>
@@ -40,21 +44,25 @@ export default function TabsLayout() {
           left: 14,
           right: 14,
           bottom: 14,
-          height: 82,
-          borderRadius: 30,
+          height: 68,
+          borderRadius: 24,
           borderTopWidth: 0,
           backgroundColor: "#123550",
-          paddingBottom: 12,
-          paddingTop: 10,
+          paddingBottom: 8,
+          paddingTop: 8,
+          paddingHorizontal: 6,
           shadowColor: "#0a2740",
           shadowOffset: { width: 0, height: 16 },
           shadowOpacity: 0.28,
           shadowRadius: 24,
           elevation: 12,
         },
+        tabBarItemStyle: {
+          paddingVertical: 4,
+        },
+        tabBarShowLabel: false,
         tabBarActiveTintColor: "#f4fbff",
         tabBarInactiveTintColor: "rgba(232,247,255,0.74)",
-        tabBarLabelStyle: { fontSize: 11, fontWeight: "800", marginTop: 2 },
         headerBackground: () => <LinearGradient colors={["#f9fdff", "#e9f6fe"]} style={{ flex: 1 }} />,
       }}
     >
@@ -62,8 +70,7 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Hladat",
-          tabBarLabel: "Hladat",
-          tabBarIcon: ({ focused }) => <TabIcon label="FND" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon label="Hladat" icon={focused ? "search" : "search-outline"} focused={focused} />,
           headerTitle: "Hladat",
         }}
       />
@@ -71,8 +78,7 @@ export default function TabsLayout() {
         name="map"
         options={{
           title: "Mapa",
-          tabBarLabel: "Mapa",
-          tabBarIcon: ({ focused }) => <TabIcon label="MAP" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon label="Mapa" icon={focused ? "map" : "map-outline"} focused={focused} />,
           headerTitle: "Mapa regionov",
         }}
       />
@@ -80,8 +86,7 @@ export default function TabsLayout() {
         name="songs/index"
         options={{
           title: "Filtre",
-          tabBarLabel: "Filtre",
-          tabBarIcon: ({ focused }) => <TabIcon label="FLT" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon label="Filtre" icon={focused ? "options" : "options-outline"} focused={focused} />,
           headerTitle: "Filtre",
         }}
       />
@@ -90,8 +95,7 @@ export default function TabsLayout() {
         options={{
           href: canAddSong ? undefined : null,
           title: "Pridat",
-          tabBarLabel: "Pridat",
-          tabBarIcon: ({ focused }) => <TabIcon label="ADD" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon label="Pridat" icon={focused ? "add-circle" : "add-circle-outline"} focused={focused} />,
           headerTitle: "Pridat piesen",
         }}
       />
@@ -99,8 +103,7 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: user ? user.nick : "Profil",
-          tabBarLabel: "Profil",
-          tabBarIcon: ({ focused }) => <TabIcon label="USR" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon label="Profil" icon={focused ? "person" : "person-outline"} focused={focused} />,
           headerTitle: "Profil",
         }}
       />

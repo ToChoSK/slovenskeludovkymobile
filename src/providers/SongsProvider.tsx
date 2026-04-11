@@ -22,6 +22,7 @@ import type { MetadataAllSongsDoc, OfflineDatasetMeta, Song, SongCatalogItem, So
 type SongsContextValue = {
   songs: SongCatalogItem[]
   metadata: MetadataAllSongsDoc | null
+  offlineMeta: OfflineDatasetMeta | null
   loading: boolean
   error: string | null
   getSongPreview: (songId: number) => SongCatalogItem | null
@@ -189,6 +190,7 @@ export function SongsProvider({ children }: { children: ReactNode }) {
     () => ({
       songs,
       metadata,
+      offlineMeta: meta,
       loading,
       error,
       getSongPreview: (songId) => songsById.get(songId) ?? null,
@@ -313,7 +315,7 @@ export function SongsProvider({ children }: { children: ReactNode }) {
         void incrementSongViewCount(songId)
       },
     }),
-    [songs, metadata, loading, error, titleIndex, songsById, meta],
+    [songs, metadata, meta, loading, error, titleIndex, songsById],
   )
 
   return <SongsContext.Provider value={value}>{children}</SongsContext.Provider>

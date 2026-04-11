@@ -148,6 +148,7 @@ export type SongIndexSortKey = "title" | "region" | "obec" | "favorites" | "view
 export type OfflineMode = "online" | "offline"
 
 export interface OfflineDatasetMeta {
+  bundledVersion?: string | null
   downloadedAt: string
   etag?: string | null
   lastModified?: string | null
