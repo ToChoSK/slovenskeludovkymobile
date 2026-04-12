@@ -13,18 +13,18 @@ export default function RegisterScreen() {
   return (
     <Screen>
       <Card>
-        <Heading>Registracia</Heading>
-        <Field value={nick} onChangeText={setNick} placeholder="Prezivka" />
+        <Heading>Registrácia</Heading>
+        <Field value={nick} onChangeText={setNick} placeholder="Prezývka" />
         <Field value={email} onChangeText={setEmail} placeholder="Email" />
         <Field value={password} onChangeText={setPassword} placeholder="Heslo" secureTextEntry />
         {!!error && <Subtle>{error}</Subtle>}
         {!!authWarning && <Subtle>{authWarning}</Subtle>}
         <Button
-          label="Vytvorit ucet"
+          label="Vytvoriť účet"
           onPress={() =>
             void signUp(email, password, nick)
               .then(() => router.replace("/"))
-              .catch((reason: any) => setError(reason?.message ?? "Registracia zlyhala."))
+              .catch((reason: any) => setError(reason?.message ?? "Registrácia zlyhala."))
           }
         />
       </Card>

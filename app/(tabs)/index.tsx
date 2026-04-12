@@ -3,7 +3,9 @@ import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native"
 import { Badge, Button, Card, EmptyState, Field, Loading, ProgressBar, SongCard } from "@/components/ui"
+import { loadMobileAppUpdatePrompt } from "@/lib/app-update"
 import { useSongs } from "@/providers/SongsProvider"
+import type { MobileAppUpdatePrompt } from "@/types"
 
 export default function SearchScreen() {
   const { songs, loading, error, searchSongs } = useSongs()
@@ -12,7 +14,9 @@ export default function SearchScreen() {
   const [progress, setProgress] = useState(0)
   const [results, setResults] = useState<number[]>([])
   const [searchedQuery, setSearchedQuery] = useState("")
+  const [appUpdatePrompt, setAppUpdatePrompt] = useState<MobileAppUpdatePrompt | null>(null)
   const searchSignalRef = useRef<{ cancelled: boolean } | null>(null)
+
   const resultSongs = useMemo(
     () =>
       results
@@ -51,6 +55,21 @@ export default function SearchScreen() {
   }
 
   useEffect(() => {
+    let alive = true
+    void loadMobileAppUpdatePrompt()
+      .then((prompt) => {
+        if (alive) setAppUpdatePrompt(prompt)
+      })
+      .catch(() => {
+        if (alive) setAppUpdatePrompt(null)
+      })
+
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  useEffect(() => {
     const trimmed = query.trim()
     if (!trimmed) {
       if (searchSignalRef.current) searchSignalRef.current.cancelled = true
@@ -72,14 +91,96 @@ export default function SearchScreen() {
     return (
       <ScrollView style={{ flex: 1, backgroundColor: "#eef7fd" }} contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 120 }}>
         <Card>
-          <Loading label="Nacitavam lokalny katalog..." />
+          <Loading label="Načítavam lokálny katalóg..." />
         </Card>
       </ScrollView>
     )
   }
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#eef7fd" }} contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 120 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#eef7fd" }} contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 120 }}>
+      {appUpdatePrompt ? (
+        <Card>
+          <View style={{ gap: 8 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+              <Text style={{ flex: 1, fontSize: 18, fontWeight: "900", color: "#13324a" }}>{appUpdatePrompt.title}</Text>
+              <Badge label={`v${appUpdatePrompt.latestVersion}`} color="#c56a10" />
+            </View>
+            {appUpdatePrompt.message ? <Text style={{ color: "#5d7a92", fontSize: 14, lineHeight: 20 }}>{appUpdatePrompt.message}</Text> : null}
+            <Button label="Aktualizovať v Google Play" onPress={() => void Linking.openURL(appUpdatePrompt.storeUrl)} />
+          </View>
+        </Card>
+      ) : null}
+
+      <LinearGradient
+        colors={["#0a2539", "#16537e", "#7bd3ff"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ borderRadius: 32, padding: 18, gap: 14, overflow: "hidden" }}
+      >
+        <View
+          style={{
+            position: "absolute",
+            right: -26,
+            top: -18,
+            width: 120,
+            height: 120,
+            borderRadius: 999,
+            backgroundColor: "rgba(255,255,255,0.10)",
+          }}
+        />
+        <View
+          style={{
+            position: "absolute",
+            left: -34,
+            bottom: -44,
+            width: 150,
+            height: 150,
+            borderRadius: 999,
+            backgroundColor: "rgba(255,255,255,0.08)",
+          }}
+        />
+
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 12, flex: 1 }}>
+            <Image source={require("../../assets/ludovkylogo.png")} style={{ width: 52, height: 52, borderRadius: 14 }} resizeMode="contain" />
+            <View style={{ flex: 1, gap: 4 }}>
+              <Badge label="Hlavné vyhľadávanie" color="#b9ecff" />
+              <Text style={{ fontSize: 30, lineHeight: 34, color: "#f3fbff", fontWeight: "900" }}>Hľadať</Text>
+            </View>
+          </View>
+          <Badge label={`${songs.length} piesní`} color="#9ce1ff" />
+        </View>
+
+        <Text style={{ fontSize: 15, lineHeight: 22, color: "rgba(239,250,255,0.92)", fontWeight: "600" }}>
+          Hľadať podľa názvu, obce, alebo textu.
+        </Text>
+
+        <View
+          style={{
+            borderRadius: 24,
+            backgroundColor: "rgba(248,252,255,0.16)",
+            borderWidth: 1,
+            borderColor: "rgba(226,244,255,0.28)",
+            padding: 12,
+            gap: 10,
+          }}
+        >
+          <Field value={query} onChangeText={setQuery} placeholder="Hľadať podľa názvu, obce, alebo textu" />
+
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <View style={{ flex: 1.4 }}>
+              <Button label="Hľadať" onPress={() => void runFulltextSearch()} loading={searching} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Button label="Piesne" tone="secondary" onPress={() => router.push("/(tabs)/songs")} />
+            </View>
+          </View>
+        </View>
+
+        {searching ? <ProgressBar progress={progress} label={`Prehľadávam index... ${Math.round(progress * 100)} %`} /> : null}
+      </LinearGradient>
+
       <Pressable onPress={() => void Linking.openURL("https://slovenskeludovky.sk")} style={({ pressed }) => ({ opacity: pressed ? 0.96 : 1 })}>
         <LinearGradient
           colors={["#dff4ff", "#ecf9ff"]}
@@ -97,52 +198,24 @@ export default function SearchScreen() {
             <Image source={require("../../assets/ludovkylogo.png")} style={{ width: 34, height: 34, borderRadius: 8 }} resizeMode="contain" />
             <View style={{ flex: 1 }}>
               <Text style={{ fontSize: 16, fontWeight: "900", color: "#123a58" }}>Viac na slovenskeludovky.sk</Text>
-              <Text style={{ fontSize: 13, color: "#456984" }}>Albumy, oblubene piesne a ziva databaza.</Text>
+              <Text style={{ fontSize: 13, color: "#456984" }}>Albumy, obľúbené piesne a živá databáza.</Text>
             </View>
           </View>
         </LinearGradient>
       </Pressable>
 
-      <LinearGradient
-        colors={["#0f2d46", "#1a5b87", "#7bd3ff"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ borderRadius: 30, padding: 18, gap: 14 }}
-      >
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <Image source={require("../../assets/ludovkylogo.png")} style={{ width: 46, height: 46, borderRadius: 12 }} resizeMode="contain" />
-            <Text style={{ fontSize: 30, lineHeight: 34, color: "#f3fbff", fontWeight: "900" }}>Hladat</Text>
-          </View>
-          <Badge label={`${songs.length} piesni`} color="#9ce1ff" />
-        </View>
-
-        <Field value={query} onChangeText={setQuery} placeholder="Hladaj piesen..." />
-
-        <View style={{ flexDirection: "row", gap: 10 }}>
-          <View style={{ flex: 1 }}>
-            <Button label="Hladat v texte" onPress={() => void runFulltextSearch()} loading={searching} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Button label="Filtre" tone="secondary" onPress={() => router.push("/(tabs)/songs")} />
-          </View>
-        </View>
-
-        {searching ? <ProgressBar progress={progress} label={`Prehladavam index... ${Math.round(progress * 100)} %`} /> : null}
-      </LinearGradient>
-
       {error ? (
         <Card>
-          <Text style={{ fontSize: 15, fontWeight: "800", color: "#8f2d1c" }}>Dataset sa nepodarilo nacitat</Text>
+          <Text style={{ fontSize: 15, fontWeight: "800", color: "#8f2d1c" }}>Dáta sa nepodarilo načítať.</Text>
           <Text style={{ color: "#7d6f63", fontSize: 14 }}>{error}</Text>
         </Card>
       ) : null}
 
       <Card>
         {!searchedQuery ? (
-          <EmptyState title="Spusti hladanie v texte" subtitle="Zacni pisat a hladanie sa spusti automaticky." />
+          <EmptyState title="Začni hľadať" subtitle="Napíš názov, obec alebo časť textu piesne a výsledky sa zobrazia automaticky." />
         ) : !searching && resultSongs.length === 0 ? (
-          <EmptyState title="Bez vysledkov" subtitle="Skus iny zapis." />
+          <EmptyState title="Bez výsledkov" subtitle="Skús iný názov, obec alebo časť textu." />
         ) : (
           resultSongs.slice(0, 20).map((song) => (
             <SongCard
@@ -157,7 +230,7 @@ export default function SearchScreen() {
           ))
         )}
         {resultSongs.length > 20 ? (
-          <Button label={`Otvorit vo filtroch (${resultSongs.length})`} tone="secondary" onPress={() => router.push({ pathname: "/(tabs)/songs", params: { query: searchedQuery } })} />
+          <Button label={`Otvoriť v zozname (${resultSongs.length})`} tone="secondary" onPress={() => router.push({ pathname: "/(tabs)/songs", params: { query: searchedQuery } })} />
         ) : null}
       </Card>
     </ScrollView>

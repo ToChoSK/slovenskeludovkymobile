@@ -179,9 +179,9 @@ export function SongCard({
         <Text style={styles.songTitle} numberOfLines={2}>
           {title}
         </Text>
-        <Text style={styles.songMeta}>{[region, obec].filter(Boolean).join(" · ") || "Bez regionu"}</Text>
+        <Text style={styles.songMeta}>{[region, obec].filter(Boolean).join(" · ") || "Bez regiónu"}</Text>
         <View style={styles.songStatsRow}>
-          {typeof favoriteCount === "number" && <Text style={styles.songStat}>Oblubene {favoriteCount}</Text>}
+          {typeof favoriteCount === "number" && <Text style={styles.songStat}>Obľúbené {favoriteCount}</Text>}
           {typeof viewCount === "number" && <Text style={styles.songStat}>Zobrazenia {viewCount}</Text>}
         </View>
       </View>

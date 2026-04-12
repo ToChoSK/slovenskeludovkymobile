@@ -133,10 +133,10 @@ export function SlovakiaMap({ metadata, selectedRegion, onSelectRegion, onOpenRe
           </Svg>
         </View>
 
-        <Text style={{ fontSize: 13, color: "#63819a" }}>Klepni priamo na region v mape alebo pouzi rychly vyber nizsie.</Text>
+        <Text style={{ fontSize: 13, color: "#63819a" }}>Klepni priamo na región v mape alebo použi rýchly výber nižšie.</Text>
 
         <Button
-          label={selectedRegion === "all" ? "Zobrazit vsetky piesne" : `Zobrazit piesne: ${selectedLabel}`}
+          label={selectedRegion === "all" ? "Zobraziť všetky piesne" : `Zobraziť piesne: ${selectedLabel}`}
           onPress={() => onOpenRegionSongs?.(selectedRegion)}
           disabled={!onOpenRegionSongs}
         />
@@ -171,7 +171,7 @@ export function SlovakiaMap({ metadata, selectedRegion, onSelectRegion, onOpenRe
                   />
                   <Text style={{ fontSize: 13, fontWeight: "700", color: "#153550", flexShrink: 1 }}>{meta.label}</Text>
                 </View>
-                <Text style={{ fontSize: 12, color: "#63819a" }}>{regionCounts[key] ?? 0} piesni</Text>
+                <Text style={{ fontSize: 12, color: "#63819a" }}>{regionCounts[key] ?? 0} piesní</Text>
               </TouchableOpacity>
             )
           })}
@@ -220,10 +220,10 @@ export function SlovakiaMap({ metadata, selectedRegion, onSelectRegion, onOpenRe
             <Text style={{ fontSize: 14, fontWeight: "700", color: "#153550" }}>
               {REGION_META[selectedRegion as RegionKey]?.label ?? selectedRegion}
             </Text>
-            <Text style={{ fontSize: 12, color: "#63819a" }}>{regionCounts[selectedRegion] ?? 0} piesni v aktualnom indexe</Text>
+            <Text style={{ fontSize: 12, color: "#63819a" }}>{regionCounts[selectedRegion] ?? 0} piesní v aktuálnom indexe</Text>
           </View>
           <TouchableOpacity onPress={() => onSelectRegion("all")}>
-            <Text style={{ color: "#2a86c3", fontSize: 13, fontWeight: "700" }}>Zrusit</Text>
+            <Text style={{ color: "#2a86c3", fontSize: 13, fontWeight: "700" }}>Zrušiť</Text>
           </TouchableOpacity>
         </View>
       )}

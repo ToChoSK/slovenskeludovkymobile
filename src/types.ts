@@ -172,3 +172,26 @@ export interface DatasetVersionInfo {
   remoteLastModified?: string | null
   message?: string | null
 }
+
+export interface MobileAppUpdatePlatformConfig {
+  enabled: boolean
+  latestVersion: string
+  minSupportedVersion?: string | null
+  storeUrl: string
+  title?: string | null
+  message?: string | null
+}
+
+export interface MobileAppUpdateConfig {
+  android?: MobileAppUpdatePlatformConfig
+  ios?: MobileAppUpdatePlatformConfig
+}
+
+export interface MobileAppUpdatePrompt {
+  storeUrl: string
+  title: string
+  message: string | null
+  latestVersion: string
+  minSupportedVersion: string | null
+  required: boolean
+}

@@ -10,8 +10,8 @@ type SortBy = "views" | "title" | "favorites"
 
 const SORT_LABELS: Record<SortBy, string> = {
   views: "Zobrazenia",
-  title: "Nazov",
-  favorites: "Oblubene",
+  title: "Názov",
+  favorites: "Obľúbené",
 }
 
 const ALL_REGION_KEYS = [...MAP_REGION_KEYS, ...EXTRA_REGION_KEYS]
@@ -62,12 +62,12 @@ export default function SongsScreen() {
       <Card>
         <View style={{ gap: 6 }}>
           <Text style={{ fontSize: 12, fontWeight: "800", color: "#2b7fb9", letterSpacing: 1.1, textTransform: "uppercase" }}>Katalog</Text>
-          <Text style={{ fontSize: 24, fontWeight: "900", color: "#13324a" }}>Prehladavaj regiony, nazvy a metadata.</Text>
-          <Subtle>Fulltext podla textu piesni bezi z domovskej obrazovky. Tu je rychly katalog a filter regionov.</Subtle>
+          <Text style={{ fontSize: 24, fontWeight: "900", color: "#13324a" }}>Prehľadávaj regióny, názvy a metadáta.</Text>
+          <Subtle>Fulltext podľa textu piesní beží z domovskej obrazovky. Tu nájdeš rýchly katalóg a filter regiónov.</Subtle>
         </View>
 
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-          <Badge label={`${rows.length} vysledkov`} />
+          <Badge label={`${rows.length} výsledkov`} />
           <TouchableOpacity
             onPress={() =>
               startSortTransition(() => {
@@ -90,13 +90,13 @@ export default function SongsScreen() {
           >
             {isSortPending ? <ActivityIndicator size="small" color="#17354d" /> : null}
             <Text style={{ color: "#17354d", fontWeight: "800" }}>
-              {isSortPending ? "Triedim..." : `Sort: ${search.trim() ? SORT_LABELS.views : SORT_LABELS[sortBy]}`}
+              {isSortPending ? "Triedim..." : `Triedenie: ${search.trim() ? SORT_LABELS.views : SORT_LABELS[sortBy]}`}
             </Text>
           </TouchableOpacity>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingHorizontal: 2 }}>
           <FilterChip
-            label="Vsetky"
+            label="Všetky"
             active={region === "all"}
             onPress={() =>
               startTransition(() => {
@@ -129,7 +129,7 @@ export default function SongsScreen() {
               setSearch(value)
             })
           }
-          placeholder="Filtruj podla nazvu, regionu alebo obce..."
+          placeholder="Filtruj podľa názvu, regiónu alebo obce..."
         />
       </Card>
 
@@ -143,7 +143,7 @@ export default function SongsScreen() {
       data={rows}
       keyExtractor={(item) => String(item.id)}
       ListHeaderComponent={header}
-      ListEmptyComponent={<View style={{ paddingHorizontal: 16 }}><Card><EmptyState title="Ziadne piesne" subtitle="Skus iny filter alebo sa vrat na domov a pouzi fulltext search." /></Card></View>}
+      ListEmptyComponent={<View style={{ paddingHorizontal: 16 }}><Card><EmptyState title="Žiadne piesne" subtitle="Skús iný filter alebo sa vráť na domovskú obrazovku a použi fulltextové hľadanie." /></Card></View>}
       renderItem={({ item }) => (
         <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
           <SongCard

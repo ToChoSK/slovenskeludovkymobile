@@ -4,6 +4,7 @@ import { Stack, router, useLocalSearchParams } from "expo-router"
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react"
 import { Alert, Linking, Pressable, Text, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
+import { useHasPrivilege } from "@/lib/privileges"
 import { REGION_META, resolveRegionKey } from "@/lib/regions"
 import { normalizeSearchText } from "@/lib/search"
 import { Button, Card, EmptyState, Field, Heading, Loading, Screen, SongCard, Subtle } from "@/components/ui"
@@ -30,11 +31,13 @@ export default function SongDetailScreen() {
     deleteSong,
   } = useSongs()
 
-  const canAddTextVersion = true
-  const canDeleteTextVersion = true
-  const canEditSong = true
-  const canDeleteSong = true
-  const canSelectNextSong = true
+  const canManageFavorites = useHasPrivilege(user, "manage_favorites")
+  const canLikeTextVersion = useHasPrivilege(user, "like_text_version")
+  const canAddTextVersion = useHasPrivilege(user, "add_text_version")
+  const canDeleteTextVersion = useHasPrivilege(user, "delete_text_version")
+  const canEditSong = useHasPrivilege(user, "edit_song")
+  const canDeleteSong = useHasPrivilege(user, "delete_song")
+  const canSelectNextSong = useHasPrivilege(user, "select_next_song")
 
   const songPreview = getSongPreview(songId)
   const [song, setSong] = useState<Awaited<ReturnType<typeof getSong>>>(null)
@@ -59,10 +62,10 @@ export default function SongDetailScreen() {
         const loaded = await getSong(songId)
         if (!alive) return
         setSong(loaded)
-        if (!loaded) setLoadError("Piesen sa nenasla.")
+        if (!loaded) setLoadError("Pieseň sa nenašla.")
       } catch (error) {
         if (!alive) return
-        setLoadError(error instanceof Error ? error.message : "Nepodarilo sa nacitat piesen.")
+        setLoadError(error instanceof Error ? error.message : "Nepodarilo sa načítať pieseň.")
       }
     })()
     return () => {
@@ -158,7 +161,7 @@ export default function SongDetailScreen() {
 
   function ensureLikeAllowed() {
     if (!user) {
-      Alert.alert("Prihlasenie je potrebne", "Pre tuto akciu sa musis najprv prihlasit.")
+      Alert.alert("Je potrebné prihlásenie", "Pre túto akciu sa musíš najprv prihlásiť.")
       return false
     }
     return true
@@ -190,17 +193,18 @@ export default function SongDetailScreen() {
 
   async function handleFavoriteToggle() {
     if (!song) return
+    if (!canManageFavorites) return
     if (!ensureLikeAllowed()) return
     if (!acquireLikeLock("song")) return
     const wasActive = favoriteActive
     setFavoriteActive(!wasActive)
     setSong((current) => (current ? { ...current, favoriteCount: Math.max(0, current.favoriteCount + (wasActive ? -1 : 1)) } : current))
     try {
-      await runWithTimeout(toggleFavoriteSong(user!.id, song.id, wasActive), 9000, "Akcia trva prilis dlho. Skus to znovu.")
+      await runWithTimeout(toggleFavoriteSong(user!.id, song.id, wasActive), 9000, "Akcia trvá príliš dlho. Skús to znova.")
     } catch (error) {
       setFavoriteActive(wasActive)
       setSong((current) => (current ? { ...current, favoriteCount: Math.max(0, current.favoriteCount + (wasActive ? 1 : -1)) } : current))
-      Alert.alert("Chyba", error instanceof Error ? error.message : "Nepodarilo sa upravit oblubene.")
+      Alert.alert("Chyba", error instanceof Error ? error.message : "Nepodarilo sa upraviť obľúbené.")
     } finally {
       releaseLikeLock("song")
     }
@@ -208,6 +212,7 @@ export default function SongDetailScreen() {
 
   async function handleTextVersionLike(textVersionId: number) {
     if (!song) return
+    if (!canLikeTextVersion) return
     if (!ensureLikeAllowed()) return
     const key = `text-${textVersionId}`
     if (!acquireLikeLock(key)) return
@@ -229,7 +234,7 @@ export default function SongDetailScreen() {
         : current,
     )
     try {
-      await runWithTimeout(likeTextVersion(user!.id, song.id, textVersionId, wasActive), 9000, "Akcia trva prilis dlho. Skus to znovu.")
+      await runWithTimeout(likeTextVersion(user!.id, song.id, textVersionId, wasActive), 9000, "Akcia trvá príliš dlho. Skús to znova.")
     } catch (error) {
       setTextLikeIds((current) => {
         const next = new Set(current)
@@ -247,7 +252,7 @@ export default function SongDetailScreen() {
             }
           : current,
       )
-      Alert.alert("Chyba", error instanceof Error ? error.message : "Nepodarilo sa upravit like textovej verzie.")
+      Alert.alert("Chyba", error instanceof Error ? error.message : "Nepodarilo sa upraviť označenie páči sa mi pri textovej verzii.")
     } finally {
       releaseLikeLock(key)
     }
@@ -255,6 +260,7 @@ export default function SongDetailScreen() {
 
   async function handleNextSongLike(nextSongId: number) {
     if (!song) return
+    if (!canSelectNextSong) return
     if (!ensureLikeAllowed()) return
     const key = `next-${nextSongId}`
     if (!acquireLikeLock(key)) return
@@ -276,7 +282,7 @@ export default function SongDetailScreen() {
         : current,
     )
     try {
-      await runWithTimeout(toggleNextSongLike(user!.id, song.id, nextSongId, wasActive), 9000, "Akcia trva prilis dlho. Skus to znovu.")
+      await runWithTimeout(toggleNextSongLike(user!.id, song.id, nextSongId, wasActive), 9000, "Akcia trvá príliš dlho. Skús to znova.")
     } catch (error) {
       setNextLikeIds((current) => {
         const next = new Set(current)
@@ -294,7 +300,7 @@ export default function SongDetailScreen() {
             }
           : current,
       )
-      Alert.alert("Chyba", error instanceof Error ? error.message : "Nepodarilo sa upravit like next song.")
+      Alert.alert("Chyba", error instanceof Error ? error.message : "Nepodarilo sa upraviť označenie páči sa mi pri nadväzujúcej piesni.")
     } finally {
       releaseLikeLock(key)
     }
@@ -307,17 +313,17 @@ export default function SongDetailScreen() {
           {songPreview ? (
             <View style={{ gap: 10 }}>
               <Heading>{songPreview.title}</Heading>
-              <Subtle>{[songPreview.region, songPreview.obec].filter(Boolean).join(" · ") || "Bez regionu"}</Subtle>
+              <Subtle>{[songPreview.region, songPreview.obec].filter(Boolean).join(" · ") || "Bez regiónu"}</Subtle>
               <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
                 <MetricChip icon="heart-outline" label={String(songPreview.favoriteCount)} />
                 <MetricChip icon="eye-outline" label={String(songPreview.viewCount)} />
               </View>
-              {loadError ? <EmptyState title="Nepodarilo sa nacitat piesen" subtitle={loadError} /> : <Loading label="Nacitavam texty a detaily piesne..." />}
+              {loadError ? <EmptyState title="Nepodarilo sa načítať pieseň" subtitle={loadError} /> : <Loading label="Načítavam texty a detaily piesne..." />}
             </View>
           ) : loadError ? (
-            <EmptyState title="Nepodarilo sa nacitat piesen" subtitle={loadError} />
+            <EmptyState title="Nepodarilo sa načítať pieseň" subtitle={loadError} />
           ) : (
-            <Loading label="Nacitavam piesen..." />
+            <Loading label="Načítavam pieseň..." />
           )}
         </Card>
       </Screen>
@@ -335,7 +341,7 @@ export default function SongDetailScreen() {
           headerLeft: () => (
             <Pressable onPress={handleBack} style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 4, paddingVertical: 4 }}>
               <Ionicons name="chevron-back" size={18} color="#143853" />
-              <Text style={{ color: "#143853", fontSize: 16, fontWeight: "800" }}>Spat</Text>
+              <Text style={{ color: "#143853", fontSize: 16, fontWeight: "800" }}>Späť</Text>
             </Pressable>
           ),
         }}
@@ -348,22 +354,21 @@ export default function SongDetailScreen() {
         style={{ borderRadius: 28, padding: 18, gap: 12, borderWidth: 2, borderColor: regionColor }}
       >
         <Text style={{ fontSize: 30, lineHeight: 34, color: "#f3fbff", fontWeight: "900" }}>{song.title}</Text>
-        <Text style={{ color: "#e8f7ff", fontSize: 13, fontWeight: "700" }}>{song.obec ?? "Neznama obec"}</Text>
+        <Text style={{ color: "#e8f7ff", fontSize: 13, fontWeight: "700" }}>{song.obec ?? "Neznáma obec"}</Text>
 
         <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
           <LikeChip active={favoriteActive} count={song.favoriteCount} onPress={() => void handleFavoriteToggle()} />
           <MetricChip icon="eye-outline" label={String(song.viewCount)} dark />
           {song.region ? <RegionTag label={song.region} color={regionColor} /> : null}
         </View>
-
       </LinearGradient>
 
       <Card>
         <View style={{ flexDirection: "row", gap: 10 }}>
-          {canEditSong ? <Button label="Upravit piesen" tone="secondary" onPress={() => router.push(`/songs/${song.id}/edit`)} /> : null}
+          {canEditSong ? <Button label="Upraviť pieseň" tone="secondary" onPress={() => router.push(`/songs/${song.id}/edit`)} /> : null}
           {canDeleteSong ? (
             <Button
-              label="Vymazat piesen"
+              label="Vymazať pieseň"
               tone="danger"
               onPress={() =>
                 void deleteSong(song.id).then(() => {
@@ -376,8 +381,8 @@ export default function SongDetailScreen() {
       </Card>
 
       <Card>
-        <Heading size="h2">Textove verzie</Heading>
-        {song.textVersions.length === 0 ? <EmptyState title="Zatial bez textov" /> : null}
+        <Heading size="h2">Textové verzie</Heading>
+        {song.textVersions.length === 0 ? <EmptyState title="Zatiaľ bez textov" /> : null}
         {song.textVersions.map((version) => {
           const liked = textLikeIds.has(version.id)
           return (
@@ -389,7 +394,7 @@ export default function SongDetailScreen() {
               <Text style={{ color: "#5d7a92", lineHeight: 22 }}>{version.text}</Text>
               {canDeleteTextVersion ? (
                 <Button
-                  label="Vymazat verziu"
+                  label="Vymazať verziu"
                   tone="danger"
                   onPress={() =>
                     void deleteTextVersion(song.id, version.id).then(() => {
@@ -411,9 +416,9 @@ export default function SongDetailScreen() {
 
         {canAddTextVersion ? (
           <View style={{ gap: 8 }}>
-            <Field value={newTextVersion} onChangeText={setNewTextVersion} placeholder="Nova textova verzia" multiline />
+            <Field value={newTextVersion} onChangeText={setNewTextVersion} placeholder="Nová textová verzia" multiline />
             <Button
-              label="Pridat textovu verziu"
+              label="Pridať textovú verziu"
               onPress={() =>
                 void addTextVersion(song.id, newTextVersion).then(() => {
                   const nextId = Math.max(0, ...song.textVersions.map((item) => item.id)) + 1
@@ -434,8 +439,8 @@ export default function SongDetailScreen() {
       </Card>
 
       <Card>
-        <Heading size="h2">Nasledujuce piesne</Heading>
-        {resolvedNextSongs.length === 0 ? <EmptyState title="Zatial bez naviazanych piesni" /> : null}
+        <Heading size="h2">Nasledujúce piesne</Heading>
+        {resolvedNextSongs.length === 0 ? <EmptyState title="Zatiaľ bez naviazaných piesní" /> : null}
         {resolvedNextSongs.map((nextSong) => {
           const liked = nextLikeIds.has(nextSong.id)
           return (
@@ -452,7 +457,7 @@ export default function SongDetailScreen() {
                 <LikeChip active={liked} count={song.nextSongs.find((item) => item.id === nextSong.id)?.likes ?? 0} onPress={() => void handleNextSongLike(nextSong.id)} />
                 {canSelectNextSong ? (
                   <IconAction
-                    label="Odstranit next song"
+                    label="Odstrániť nadväzujúcu pieseň"
                     icon="trash-outline"
                     onPress={() =>
                       void removeNextSong(song.id, nextSong.id).then(() => {
@@ -476,7 +481,7 @@ export default function SongDetailScreen() {
 
         {canSelectNextSong ? (
           <View style={{ gap: 8 }}>
-            <Field value={nextSongQuery} onChangeText={setNextSongQuery} placeholder="Vyhladaj nazov dalsej piesne..." />
+            <Field value={nextSongQuery} onChangeText={setNextSongQuery} placeholder="Vyhľadaj názov ďalšej piesne..." />
 
             {nextSongCandidates.map((item) => (
               <Pressable
@@ -495,20 +500,20 @@ export default function SongDetailScreen() {
                 }}
               >
                 <Text style={{ fontSize: 14, fontWeight: "800", color: "#153550" }}>{item.title}</Text>
-                <Text style={{ fontSize: 12, color: "#5d7a92" }}>{[item.region, item.obec].filter(Boolean).join(" · ") || "Bez regionu"}</Text>
+                <Text style={{ fontSize: 12, color: "#5d7a92" }}>{[item.region, item.obec].filter(Boolean).join(" · ") || "Bez regiónu"}</Text>
               </Pressable>
             ))}
             {deferredNextSongQuery.trim().length > 0 && normalizeSearchText(deferredNextSongQuery).length >= 2 && nextSongCandidates.length === 0 ? (
-              <Subtle>Nenasla sa zhoda v nazvoch piesni.</Subtle>
+              <Subtle>Nenašla sa zhoda v názvoch piesní.</Subtle>
             ) : null}
             {deferredNextSongQuery.trim().length > 0 && normalizeSearchText(deferredNextSongQuery).length < 2 ? (
-              <Subtle>Pre rychle vyhladavanie zadaj aspon 2 znaky.</Subtle>
+              <Subtle>Pre rýchle vyhľadávanie zadaj aspoň 2 znaky.</Subtle>
             ) : null}
 
-            {selectedNextSong ? <Subtle>Vybrane: {selectedNextSong.title}</Subtle> : null}
+            {selectedNextSong ? <Subtle>Vybrané: {selectedNextSong.title}</Subtle> : null}
 
             <Button
-              label="Pridat next song"
+              label="Pridať nadväzujúcu pieseň"
               disabled={!selectedNextSong}
               onPress={() =>
                 void (async () => {
@@ -531,9 +536,9 @@ export default function SongDetailScreen() {
                     }
                     setSelectedNextSongId(null)
                     setNextSongQuery("")
-                    Alert.alert("Hotovo", "Next song bol pridany.")
+                    Alert.alert("Hotovo", "Nadväzujúca pieseň bola pridaná.")
                   } catch (error) {
-                    Alert.alert("Chyba", error instanceof Error ? error.message : "Nepodarilo sa pridat next song.")
+                    Alert.alert("Chyba", error instanceof Error ? error.message : "Nepodarilo sa pridať nadväzujúcu pieseň.")
                   }
                 })()
               }

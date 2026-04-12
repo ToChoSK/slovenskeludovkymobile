@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
     setUser(toFallbackUser(firebaseUser))
-    setAuthWarning("Firebase Auth funguje, ale Firestore profil sa nepodarilo nacitat.")
+    setAuthWarning("Firebase Auth funguje, ale Firestore profil sa nepodarilo načítať.")
   }
 
   const refreshUser = async () => {
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await syncUserProfile(firebaseUser)
       } catch {
         setUser(firebaseUser ? toFallbackUser(firebaseUser) : null)
-        setAuthWarning("Pouzivatel je prihlaseny, ale Firestore momentalne neodpoveda.")
+        setAuthWarning("Používateľ je prihlásený, ale Firestore momentálne neodpovedá.")
       } finally {
         setLoading(false)
       }
@@ -98,17 +98,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       authWarning,
       signIn: async (email, password) => {
-        if (!auth) throw new Error("Firebase Auth nie je inicializovany.")
+        if (!auth) throw new Error("Firebase Auth nie je inicializovaný.")
         await signInWithEmailAndPassword(auth, email, password)
       },
       signUp: async (email, password, nick) => {
-        if (!auth) throw new Error("Firebase Auth nie je inicializovany.")
+        if (!auth) throw new Error("Firebase Auth nie je inicializovaný.")
         const credentials = await createUserWithEmailAndPassword(auth, email, password)
         await createUserProfile(credentials.user.uid, { email, nick })
         await refreshUser()
       },
       logout: async () => {
-        if (!auth) throw new Error("Firebase Auth nie je inicializovany.")
+        if (!auth) throw new Error("Firebase Auth nie je inicializovaný.")
         await signOut(auth)
         setUser(null)
       },
@@ -122,6 +122,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const value = useContext(AuthContext)
-  if (!value) throw new Error("useAuth musi byt pouzity v AuthProvider.")
+  if (!value) throw new Error("useAuth musí byť použitý v AuthProvider.")
   return value
 }

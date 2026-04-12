@@ -225,7 +225,7 @@ export function SongsProvider({ children }: { children: ReactNode }) {
       },
       updateSong: async (songId, patch) => {
         const current = await ensureSong(songId)
-        if (!current) throw new Error("Piesen sa nenasla.")
+        if (!current) throw new Error("Pieseň sa nenašla.")
         await updateSongRemote(songId, patch)
         await upsertLocalSong({ ...current, ...patch })
       },
@@ -235,26 +235,26 @@ export function SongsProvider({ children }: { children: ReactNode }) {
       },
       addTextVersion: async (songId, text) => {
         const current = await ensureSong(songId)
-        if (!current) throw new Error("Piesen sa nenasla.")
+        if (!current) throw new Error("Pieseň sa nenašla.")
         const nextId = Math.max(0, ...current.textVersions.map((item) => item.id)) + 1
         await addTextVersionRemote(songId, text)
         await upsertLocalSong({ ...current, textVersions: [...current.textVersions, { id: nextId, creationTime: Timestamp.now(), likes: 0, text }] })
       },
       updateTextVersion: async (songId, textVersionId, text) => {
         const current = await ensureSong(songId)
-        if (!current) throw new Error("Piesen sa nenasla.")
+        if (!current) throw new Error("Pieseň sa nenašla.")
         await updateTextVersionRemote(songId, textVersionId, text)
         await upsertLocalSong({ ...current, textVersions: current.textVersions.map((version) => (version.id === textVersionId ? { ...version, text } : version)) })
       },
       deleteTextVersion: async (songId, textVersionId) => {
         const current = await ensureSong(songId)
-        if (!current) throw new Error("Piesen sa nenasla.")
+        if (!current) throw new Error("Pieseň sa nenašla.")
         await deleteTextVersionRemote(songId, textVersionId)
         await upsertLocalSong({ ...current, textVersions: current.textVersions.filter((version) => version.id !== textVersionId) })
       },
       toggleFavoriteSong: async (userId, songId, isFavorite) => {
         const current = await ensureSong(songId)
-        if (!current) throw new Error("Piesen sa nenasla.")
+        if (!current) throw new Error("Pieseň sa nenašla.")
         await toggleFavoriteSongRemote(userId, songId)
         const nextSong = { ...current, favoriteCount: Math.max(0, current.favoriteCount + (isFavorite ? -1 : 1)) }
         songCacheRef.current.set(songId, nextSong)
@@ -262,7 +262,7 @@ export function SongsProvider({ children }: { children: ReactNode }) {
       },
       likeTextVersion: async (userId, songId, textVersionId, alreadyLiked) => {
         const current = await ensureSong(songId)
-        if (!current) throw new Error("Piesen sa nenasla.")
+        if (!current) throw new Error("Pieseň sa nenašla.")
         await likeTextVersionRemote(userId, songId, textVersionId)
         const nextSong = {
           ...current,
@@ -274,7 +274,7 @@ export function SongsProvider({ children }: { children: ReactNode }) {
       },
       addNextSong: async (songId, nextSongId) => {
         const current = await ensureSong(songId)
-        if (!current) throw new Error("Piesen sa nenasla.")
+        if (!current) throw new Error("Pieseň sa nenašla.")
         await addNextSongRemote(songId, nextSongId)
         if (!current.nextSongs.some((item) => item.id === nextSongId)) {
           const nextSong = { ...current, nextSongs: [...current.nextSongs, { id: nextSongId, likes: 0 }] }
@@ -286,7 +286,7 @@ export function SongsProvider({ children }: { children: ReactNode }) {
       },
       removeNextSong: async (songId, nextSongId) => {
         const current = await ensureSong(songId)
-        if (!current) throw new Error("Piesen sa nenasla.")
+        if (!current) throw new Error("Pieseň sa nenašla.")
         await removeNextSongRemote(songId, nextSongId)
         const nextSong = { ...current, nextSongs: current.nextSongs.filter((item) => item.id !== nextSongId) }
         songCacheRef.current.set(songId, nextSong)
@@ -296,7 +296,7 @@ export function SongsProvider({ children }: { children: ReactNode }) {
       },
       toggleNextSongLike: async (userId, songId, nextSongId, alreadyLiked) => {
         const current = await ensureSong(songId)
-        if (!current) throw new Error("Piesen sa nenasla.")
+        if (!current) throw new Error("Pieseň sa nenašla.")
         await toggleNextSongLikeWithCount(songId, nextSongId, userId)
         const nextSong = {
           ...current,
@@ -323,7 +323,7 @@ export function SongsProvider({ children }: { children: ReactNode }) {
 
 export function useSongs() {
   const value = useContext(SongsContext)
-  if (!value) throw new Error("useSongs musi byt pouzity v SongsProvider.")
+  if (!value) throw new Error("useSongs musí byť použitý v SongsProvider.")
   return value
 }
 

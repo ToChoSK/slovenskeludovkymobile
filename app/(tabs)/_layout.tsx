@@ -20,9 +20,7 @@ function TabIcon({ label, icon, focused }: { label: string; icon: keyof typeof I
       }}
     >
       <Ionicons name={icon} size={16} color={focused ? "#f4fbff" : "rgba(232,247,255,0.78)"} />
-      <Text style={{ color: focused ? "#f4fbff" : "rgba(232,247,255,0.78)", fontSize: 10, fontWeight: "800" }}>
-        {label}
-      </Text>
+      <Text style={{ color: focused ? "#f4fbff" : "rgba(232,247,255,0.78)", fontSize: 10, fontWeight: "800" }}>{label}</Text>
     </View>
   )
 }
@@ -69,9 +67,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Hladat",
-          tabBarIcon: ({ focused }) => <TabIcon label="Hladat" icon={focused ? "search" : "search-outline"} focused={focused} />,
-          headerTitle: "Hladat",
+          title: "Hľadať",
+          tabBarIcon: ({ focused }) => <TabIcon label="Hľadať" icon={focused ? "search" : "search-outline"} focused={focused} />,
+          headerTitle: "Hľadať",
         }}
       />
       <Tabs.Screen
@@ -79,24 +77,24 @@ export default function TabsLayout() {
         options={{
           title: "Mapa",
           tabBarIcon: ({ focused }) => <TabIcon label="Mapa" icon={focused ? "map" : "map-outline"} focused={focused} />,
-          headerTitle: "Mapa regionov",
+          headerTitle: "Mapa regiónov",
         }}
       />
       <Tabs.Screen
         name="songs/index"
         options={{
-          title: "Filtre",
-          tabBarIcon: ({ focused }) => <TabIcon label="Filtre" icon={focused ? "options" : "options-outline"} focused={focused} />,
-          headerTitle: "Filtre",
+          title: "Piesne",
+          tabBarIcon: ({ focused }) => <TabIcon label="Piesne" icon={focused ? "musical-notes" : "musical-notes-outline"} focused={focused} />,
+          headerTitle: "Piesne",
         }}
       />
       <Tabs.Screen
         name="add-song"
         options={{
           href: canAddSong ? undefined : null,
-          title: "Pridat",
-          tabBarIcon: ({ focused }) => <TabIcon label="Pridat" icon={focused ? "add-circle" : "add-circle-outline"} focused={focused} />,
-          headerTitle: "Pridat piesen",
+          title: "Pridať",
+          tabBarIcon: ({ focused }) => <TabIcon label="Pridať" icon={focused ? "add-circle" : "add-circle-outline"} focused={focused} />,
+          headerTitle: "Pridať pieseň",
         }}
       />
       <Tabs.Screen

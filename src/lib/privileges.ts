@@ -3,18 +3,18 @@ import type { MetadataRolePrivilegesDoc, PrivilegeDefinition, PrivilegeId, UserR
 import { getAllRolePrivileges } from "@/services/firestore"
 
 export const PRIVILEGES: PrivilegeDefinition[] = [
-  { id: "like_text_version", name: "Lajkovat textovu verziu", description: "Pouzivatel moze pracovat s hodnotenim textovych verzii." },
-  { id: "select_next_song", name: "Vybrat dalsiu piesen", description: "Pouzivatel moze navrhovat nadvazujuce piesne." },
-  { id: "add_song", name: "Pridat piesen", description: "Pouzivatel moze vytvarat nove piesne." },
-  { id: "manage_favorites", name: "Spravovat oblubene", description: "Pouzivatel moze pridavat a odoberat oblubene piesne." },
-  { id: "manage_albums", name: "Spravovat albumy", description: "Pouzivatel moze vytvarat a spravovat albumy." },
-  { id: "add_text_version", name: "Pridat textovu verziu", description: "Pouzivatel moze pridavat dalsie textove verzie." },
-  { id: "edit_song", name: "Upravit piesen", description: "Pouzivatel moze menit metadata piesne." },
-  { id: "edit_text_version", name: "Upravit textovu verziu", description: "Pouzivatel moze menit textove verzie." },
-  { id: "delete_song", name: "Vymazat piesen", description: "Pouzivatel moze odstranit piesen." },
-  { id: "delete_text_version", name: "Vymazat textovu verziu", description: "Pouzivatel moze odstranit textovu verziu." },
-  { id: "manage_privileges", name: "Spravovat opravnenia", description: "Pouzivatel moze upravovat opravnenia roli." },
-  { id: "export_all_songs", name: "Exportovat vsetky piesne", description: "Pouzivatel moze exportovat metadata vsetkych piesni." },
+  { id: "like_text_version", name: "Lajkovať textovú verziu", description: "Používateľ môže pracovať s hodnotením textových verzií." },
+  { id: "select_next_song", name: "Vybrať ďalšiu pieseň", description: "Používateľ môže navrhovať nadväzujúce piesne." },
+  { id: "add_song", name: "Pridať pieseň", description: "Používateľ môže vytvárať nové piesne." },
+  { id: "manage_favorites", name: "Spravovať obľúbené", description: "Používateľ môže pridávať a odoberať obľúbené piesne." },
+  { id: "manage_albums", name: "Spravovať albumy", description: "Používateľ môže vytvárať a spravovať albumy." },
+  { id: "add_text_version", name: "Pridať textovú verziu", description: "Používateľ môže pridávať ďalšie textové verzie." },
+  { id: "edit_song", name: "Upraviť pieseň", description: "Používateľ môže meniť metadáta piesne." },
+  { id: "edit_text_version", name: "Upraviť textovú verziu", description: "Používateľ môže meniť textové verzie." },
+  { id: "delete_song", name: "Vymazať pieseň", description: "Používateľ môže odstrániť pieseň." },
+  { id: "delete_text_version", name: "Vymazať textovú verziu", description: "Používateľ môže odstrániť textovú verziu." },
+  { id: "manage_privileges", name: "Spravovať oprávnenia", description: "Používateľ môže upravovať oprávnenia rolí." },
+  { id: "export_all_songs", name: "Exportovať všetky piesne", description: "Používateľ môže exportovať metadáta všetkých piesní." },
 ]
 
 const FALLBACK_ROLE_PRIVILEGES: MetadataRolePrivilegesDoc = {

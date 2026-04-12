@@ -35,23 +35,23 @@ import type {
 } from "@/types"
 
 function requireDb() {
-  if (!db) throw new Error("Firebase nie je inicializovany.")
+  if (!db) throw new Error("Firebase nie je inicializovaný.")
   return db
 }
 
 const DEFAULT_PRIVILEGES: PrivilegeDefinition[] = [
-  { id: "like_text_version", name: "Lajkovat textovu verziu", description: "Pouzivatel moze oznacovat textove verzie piesni." },
-  { id: "select_next_song", name: "Vybrat dalsiu piesen", description: "Pouzivatel moze navrhovat nadvazujuce piesne." },
-  { id: "add_song", name: "Pridat piesen", description: "Pouzivatel moze vytvarat nove piesne." },
-  { id: "manage_favorites", name: "Spravovat oblubene", description: "Pouzivatel moze spravovat svoje oblubene piesne." },
-  { id: "manage_albums", name: "Spravovat albumy", description: "Pouzivatel moze vytvarat a upravovat albumy." },
-  { id: "add_text_version", name: "Pridat textovu verziu", description: "Pouzivatel moze pridavat textove verzie piesni." },
-  { id: "edit_song", name: "Upravit piesen", description: "Pouzivatel moze upravovat existujuce piesne." },
-  { id: "edit_text_version", name: "Upravit textovu verziu", description: "Pouzivatel moze upravovat textove verzie." },
-  { id: "delete_song", name: "Vymazat piesen", description: "Pouzivatel moze mazat piesne." },
-  { id: "delete_text_version", name: "Vymazat textovu verziu", description: "Pouzivatel moze mazat textove verzie." },
-  { id: "manage_privileges", name: "Spravovat opravnenia", description: "Pouzivatel moze upravovat opravnenia roli." },
-  { id: "export_all_songs", name: "Exportovat vsetky piesne", description: "Pouzivatel moze exportovat metadata vsetkych piesni." },
+  { id: "like_text_version", name: "Lajkovať textovú verziu", description: "Používateľ môže označovať textové verzie piesní." },
+  { id: "select_next_song", name: "Vybrať ďalšiu pieseň", description: "Používateľ môže navrhovať nadväzujúce piesne." },
+  { id: "add_song", name: "Pridať pieseň", description: "Používateľ môže vytvárať nové piesne." },
+  { id: "manage_favorites", name: "Spravovať obľúbené", description: "Používateľ môže spravovať svoje obľúbené piesne." },
+  { id: "manage_albums", name: "Spravovať albumy", description: "Používateľ môže vytvárať a upravovať albumy." },
+  { id: "add_text_version", name: "Pridať textovú verziu", description: "Používateľ môže pridávať textové verzie piesní." },
+  { id: "edit_song", name: "Upraviť pieseň", description: "Používateľ môže upravovať existujúce piesne." },
+  { id: "edit_text_version", name: "Upraviť textovú verziu", description: "Používateľ môže upravovať textové verzie." },
+  { id: "delete_song", name: "Vymazať pieseň", description: "Používateľ môže mazať piesne." },
+  { id: "delete_text_version", name: "Vymazať textovú verziu", description: "Používateľ môže mazať textové verzie." },
+  { id: "manage_privileges", name: "Spravovať oprávnenia", description: "Používateľ môže upravovať oprávnenia rolí." },
+  { id: "export_all_songs", name: "Exportovať všetky piesne", description: "Používateľ môže exportovať metadáta všetkých piesní." },
 ]
 
 const DEFAULT_ROLE_PRIVILEGES: MetadataRolePrivilegesDoc = {
@@ -267,11 +267,11 @@ export async function createSong(input: {
 
 export async function updateSong(songId: number, patch: Partial<Omit<SongDoc, "id" | "creationTime" | "userAddedId">>) {
   const snap = await getSongSnapshotByNumericId(songId)
-  if (!snap) throw new Error("Piesen sa nenasla.")
+  if (!snap) throw new Error("Pieseň sa nenašla.")
   const firestore = requireDb()
   await runTransaction(firestore, async (transaction) => {
     const songDoc = await transaction.get(snap.ref)
-    if (!songDoc.exists()) throw new Error("Piesen sa nenasla.")
+    if (!songDoc.exists()) throw new Error("Pieseň sa nenašla.")
     transaction.update(snap.ref, patch)
   })
 }
@@ -284,7 +284,7 @@ export async function deleteSong(songId: number) {
 
 export async function addTextVersion(songId: number, text: string) {
   const song = await getSongById(songId)
-  if (!song) throw new Error("Piesen sa nenasla.")
+  if (!song) throw new Error("Pieseň sa nenašla.")
   const nextId = Math.max(0, ...song.textVersions.map((item) => item.id)) + 1
   await updateSong(songId, {
     textVersions: [...song.textVersions, { id: nextId, creationTime: Timestamp.now(), likes: 0, text }],
@@ -293,7 +293,7 @@ export async function addTextVersion(songId: number, text: string) {
 
 export async function updateTextVersion(songId: number, textVersionId: number, text: string) {
   const song = await getSongById(songId)
-  if (!song) throw new Error("Piesen sa nenasla.")
+  if (!song) throw new Error("Pieseň sa nenašla.")
   await updateSong(songId, {
     textVersions: song.textVersions.map((item) => (item.id === textVersionId ? { ...item, text } : item)),
   })
@@ -301,7 +301,7 @@ export async function updateTextVersion(songId: number, textVersionId: number, t
 
 export async function deleteTextVersion(songId: number, textVersionId: number) {
   const song = await getSongById(songId)
-  if (!song) throw new Error("Piesen sa nenasla.")
+  if (!song) throw new Error("Pieseň sa nenašla.")
   await updateSong(songId, {
     textVersions: song.textVersions.filter((item) => item.id !== textVersionId),
   })
@@ -309,12 +309,12 @@ export async function deleteTextVersion(songId: number, textVersionId: number) {
 
 export async function toggleFavoriteSong(userId: string, songId: number) {
   const songSnap = await getSongSnapshotByNumericId(songId)
-  if (!songSnap) throw new Error("Piesen sa nenasla.")
+  if (!songSnap) throw new Error("Pieseň sa nenašla.")
   const firestore = requireDb()
   const userRef = doc(firestore, "users", userId)
   await runTransaction(firestore, async (transaction) => {
     const [userDoc, songDoc] = await Promise.all([transaction.get(userRef), transaction.get(songSnap.ref)])
-    if (!userDoc.exists() || !songDoc.exists()) throw new Error("Udaje sa nenasli.")
+    if (!userDoc.exists() || !songDoc.exists()) throw new Error("Údaje sa nenašli.")
     const user = userDoc.data() as UserDoc
     const song = normalizeSongDoc(songDoc.data())
     const hasFavorite = user.favoriteSongIds.includes(songId)
@@ -335,20 +335,20 @@ export async function incrementSongViewCount(songId: number) {
 
 export async function addNextSong(songId: number, nextSongId: number) {
   const song = await getSongById(songId)
-  if (!song) throw new Error("Piesen sa nenasla.")
+  if (!song) throw new Error("Pieseň sa nenašla.")
   if (song.nextSongs.some((item) => item.id === nextSongId)) return
   await updateSong(songId, { nextSongs: [...song.nextSongs, { id: nextSongId, likes: 0 }] })
 }
 
 export async function removeNextSong(songId: number, nextSongId: number) {
   const song = await getSongById(songId)
-  if (!song) throw new Error("Piesen sa nenasla.")
+  if (!song) throw new Error("Pieseň sa nenašla.")
   await updateSong(songId, { nextSongs: song.nextSongs.filter((item) => item.id !== nextSongId) })
 }
 
 export async function toggleNextSongLikeWithCount(songId: number, nextSongId: number, userId: string) {
   const [user, song] = await Promise.all([getUserById(userId), getSongById(songId)])
-  if (!user || !song) throw new Error("Udaje sa nenasli.")
+  if (!user || !song) throw new Error("Údaje sa nenašli.")
   const exists = user.songsNextSongLikes.some((item) => item.songId === songId && item.nextSongId === nextSongId)
   const nextUserLikes = exists
     ? user.songsNextSongLikes.filter((item) => !(item.songId === songId && item.nextSongId === nextSongId))
@@ -368,7 +368,7 @@ export async function toggleNextSongLikeWithCount(songId: number, nextSongId: nu
 
 export async function likeTextVersion(userId: string, songId: number, textVersionId: number) {
   const [user, song] = await Promise.all([getUserById(userId), getSongById(songId)])
-  if (!user || !song) throw new Error("Udaje sa nenasli.")
+  if (!user || !song) throw new Error("Údaje sa nenašli.")
   const alreadyLiked = user.songsTextVersionLikes.some((item) => item.songId === songId && item.textVersionId === textVersionId)
   const nextLikes = alreadyLiked
     ? user.songsTextVersionLikes.filter((item) => !(item.songId === songId && item.textVersionId === textVersionId))

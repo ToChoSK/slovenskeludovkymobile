@@ -15,7 +15,7 @@ export default function ProfileScreen() {
     return (
       <Screen>
         <Card>
-          <Loading label="Nacitavam profil..." />
+          <Loading label="Načítavam profil..." />
         </Card>
       </Screen>
     )
@@ -24,12 +24,15 @@ export default function ProfileScreen() {
   if (!user) {
     return (
       <Screen>
+        <DataVersionCard offlineMeta={offlineMeta} />
         <HeroCard>
-          <Text style={{ fontSize: 28, lineHeight: 32, color: "#fff8ef", fontWeight: "900" }}>Prihlas sa a tvoje oblubene, lajky aj upravy budu okamzite zapisane do cloudu aj lokalneho katalogu.</Text>
+          <Text style={{ fontSize: 28, lineHeight: 32, color: "#fff8ef", fontWeight: "900" }}>
+            Prihlás sa a tvoje obľúbené, lajky aj úpravy sa okamžite zapíšu do cloudu aj lokálneho katalógu.
+          </Text>
         </HeroCard>
         <Card style={{ gap: 12 }}>
-          <Button label="Prihlasit sa" onPress={() => router.push("/login")} />
-          <Button label="Vytvorit ucet" tone="secondary" onPress={() => router.push("/register")} />
+          <Button label="Prihlásiť sa" onPress={() => router.push("/login")} />
+          <Button label="Vytvoriť účet" tone="secondary" onPress={() => router.push("/register")} />
         </Card>
       </Screen>
     )
@@ -59,9 +62,6 @@ function LoggedProfile({
   const canLikeTextVersion = useHasPrivilege(user, "like_text_version")
   const canSelectNextSong = useHasPrivilege(user, "select_next_song")
   const [favorites, setFavorites] = useState<Awaited<ReturnType<typeof getSongs>>>([])
-  const dataVersion = offlineMeta?.bundledVersion ?? offlineMeta?.lastModified ?? offlineMeta?.etag ?? "Neznama"
-  const dataSourceLabel = offlineMeta?.source === "cdn" ? "cdn cache" : "app bundle"
-  const installedAtLabel = formatDateTime(offlineMeta?.downloadedAt)
 
   useEffect(() => {
     let alive = true
@@ -74,35 +74,24 @@ function LoggedProfile({
   }, [getSongs, user.favoriteSongIds.join("|")])
 
   const capabilityLabels = [
-    canManageFavorites ? "oblubene" : null,
+    canManageFavorites ? "obľúbené" : null,
     canLikeTextVersion ? "lajkovanie textov" : null,
     canSelectNextSong ? "next songs" : null,
-    canAddSong ? "pridanie piesni" : null,
-    canAddTextVersion ? "pridanie verzii" : null,
-    canEditSong ? "uprava piesni" : null,
-    canEditTextVersion ? "uprava verzii" : null,
-    canDeleteSong ? "mazanie piesni" : null,
-    canDeleteTextVersion ? "mazanie verzii" : null,
+    canAddSong ? "pridanie piesní" : null,
+    canAddTextVersion ? "pridanie verzií" : null,
+    canEditSong ? "úprava piesní" : null,
+    canEditTextVersion ? "úprava verzií" : null,
+    canDeleteSong ? "mazanie piesní" : null,
+    canDeleteTextVersion ? "mazanie verzií" : null,
   ].filter((item): item is string => !!item)
 
   return (
     <Screen>
-      <Card style={{ gap: 10, paddingVertical: 14 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-          <View style={{ flex: 1, gap: 3 }}>
-            <Text style={{ fontSize: 12, fontWeight: "800", letterSpacing: 0.8, color: "#2f8fcd", textTransform: "uppercase" }}>Verzia dat</Text>
-            <Text style={{ fontSize: 18, fontWeight: "900", color: "#13324a" }}>{dataVersion}</Text>
-          </View>
-          <Badge label={dataSourceLabel} color="#2f8fcd" />
-        </View>
-        <Subtle>
-          Nahrate v zariadeni: {installedAtLabel}
-        </Subtle>
-      </Card>
+      <DataVersionCard offlineMeta={offlineMeta} />
 
-        <HeroCard>
-          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-            <View style={{ flex: 1, gap: 6 }}>
+      <HeroCard>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <View style={{ flex: 1, gap: 6 }}>
             <Text style={{ fontSize: 12, fontWeight: "800", letterSpacing: 1.1, color: "#8fe0ff", textTransform: "uppercase" }}>Profil</Text>
             <Text style={{ fontSize: 28, lineHeight: 32, color: "#f4fbff", fontWeight: "900" }}>{user.nick}</Text>
             <Text style={{ fontSize: 14, lineHeight: 20, color: "rgba(235,248,255,0.82)" }}>{user.email}</Text>
@@ -112,13 +101,13 @@ function LoggedProfile({
       </HeroCard>
 
       <Card>
-        <Heading size="h2">Prehlad uctu</Heading>
-        <KeyValue label="Oblubene piesne" value={String(user.favoriteSongIds.length)} />
-        <KeyValue label="Pridane piesne" value={String(user.songsAdded.length)} />
-        <KeyValue label="Lajknute texty" value={String(user.songsTextVersionLikes.length)} />
-        <KeyValue label="Podporene prechody" value={String(user.songsNextSongLikes.length)} />
+        <Heading size="h2">Prehľad účtu</Heading>
+        <KeyValue label="Obľúbené piesne" value={String(user.favoriteSongIds.length)} />
+        <KeyValue label="Pridané piesne" value={String(user.songsAdded.length)} />
+        <KeyValue label="Lajknuté texty" value={String(user.songsTextVersionLikes.length)} />
+        <KeyValue label="Podporené prechody" value={String(user.songsNextSongLikes.length)} />
         <Button
-          label="Odhlasit sa"
+          label="Odhlásiť sa"
           tone="danger"
           onPress={() =>
             void logout().then(() => {
@@ -129,7 +118,7 @@ function LoggedProfile({
       </Card>
 
       <Card>
-        <Heading size="h2">Mobilne opravnenia</Heading>
+        <Heading size="h2">Mobilné oprávnenia</Heading>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
           {capabilityLabels.map((item) => (
             <Badge key={item} label={item} color="#2f8fcd" />
@@ -139,11 +128,11 @@ function LoggedProfile({
 
       <Card>
         <View style={{ gap: 4 }}>
-          <Heading size="h2">Oblubene piesne</Heading>
-          <Subtle>Tieto data sa mozu citat aj z Firebase profilu, lebo inak by favorite flow nedaval zmysel.</Subtle>
+          <Heading size="h2">Obľúbené piesne</Heading>
+          <Subtle>Tieto dáta sa môžu čítať aj z Firebase profilu, inak by tok obľúbených položiek nedával zmysel.</Subtle>
         </View>
         {favorites.length === 0 ? (
-          <EmptyState title="Zatial nic" subtitle="Oznac si oblubene piesne v detaile piesne." />
+          <EmptyState title="Zatiaľ nič" subtitle="Označ si obľúbené piesne v detaile piesne." />
         ) : (
           favorites.map((song) => (
             <TouchableOpacity key={song.id} activeOpacity={0.92} onPress={() => router.push(`/songs/${song.id}`)}>
@@ -156,8 +145,27 @@ function LoggedProfile({
   )
 }
 
+function DataVersionCard({ offlineMeta }: { offlineMeta: ReturnType<typeof useSongs>["offlineMeta"] }) {
+  const dataVersion = offlineMeta?.bundledVersion ?? offlineMeta?.lastModified ?? offlineMeta?.etag ?? "Neznáma"
+  const dataSourceLabel = offlineMeta?.source === "cdn" ? "cdn cache" : "app bundle"
+  const installedAtLabel = formatDateTime(offlineMeta?.downloadedAt)
+
+  return (
+    <Card style={{ gap: 10, paddingVertical: 14 }}>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <View style={{ flex: 1, gap: 3 }}>
+          <Text style={{ fontSize: 12, fontWeight: "800", letterSpacing: 0.8, color: "#2f8fcd", textTransform: "uppercase" }}>Verzia dát</Text>
+          <Text style={{ fontSize: 18, fontWeight: "900", color: "#13324a" }}>{dataVersion}</Text>
+        </View>
+        <Badge label={dataSourceLabel} color="#2f8fcd" />
+      </View>
+      <Subtle>Nahraté v zariadení: {installedAtLabel}</Subtle>
+    </Card>
+  )
+}
+
 function formatDateTime(value?: string | null) {
-  if (!value) return "nezname"
+  if (!value) return "neznáme"
 
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value

@@ -9,3 +9,5 @@ export const FIREBASE_CONFIG = {
 }
 
 export const ALL_SONGS_CDN_URL = process.env.EXPO_PUBLIC_ALL_SONGS_CDN_URL ?? ""
+export const MOBILE_APP_UPDATE_CONFIG_URL =
+  process.env.EXPO_PUBLIC_MOBILE_APP_UPDATE_CONFIG_URL ?? "https://www.slovenskeludovky.sk/mobile-app-update.json"

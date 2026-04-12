@@ -16,14 +16,14 @@ export default function MapScreen() {
       <HeroCard>
         <Text style={{ fontSize: 30, lineHeight: 34, color: "#f4fbff", fontWeight: "900" }}>Mapa regionov</Text>
         <Text style={{ fontSize: 15, lineHeight: 22, color: "rgba(235,248,255,0.82)" }}>
-          Vyber si region priamo z mapy. Dalsim klepnutim na rovnaky region sa vyber zrusi.
+          Vyber si región priamo z mapy. Ďalším klepnutím na rovnaký región sa výber zruší.
         </Text>
       </HeroCard>
 
       <Card>
         <View style={{ gap: 4 }}>
-          <Text style={{ fontSize: 12, fontWeight: "800", color: "#2b7fb9", letterSpacing: 1.1, textTransform: "uppercase" }}>Interaktivna mapa</Text>
-          <Subtle>Klik na mapu len prepina vybrany region. Filtrovanie sa nespusta automaticky.</Subtle>
+          <Text style={{ fontSize: 12, fontWeight: "800", color: "#2b7fb9", letterSpacing: 1.1, textTransform: "uppercase" }}>Interaktívna mapa</Text>
+          <Subtle>Klepnutie na mapu len prepína vybraný región. Filtrovanie sa nespúšťa automaticky.</Subtle>
         </View>
         <SlovakiaMap
           metadata={metadata}
@@ -43,7 +43,7 @@ export default function MapScreen() {
 
       <Card>
         <View style={{ gap: 8 }}>
-          <Text style={{ fontSize: 12, fontWeight: "800", color: "#2b7fb9", letterSpacing: 1.1, textTransform: "uppercase" }}>Vybrany region</Text>
+          <Text style={{ fontSize: 12, fontWeight: "800", color: "#2b7fb9", letterSpacing: 1.1, textTransform: "uppercase" }}>Vybraný región</Text>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <View
               style={{
@@ -57,8 +57,8 @@ export default function MapScreen() {
           </View>
           <Subtle>
             {selectedRegion === "slovensko"
-              ? "Momentalne nie je vybraty konkretny region."
-              : "Opatovne klepni na vybrany region, ak ho chces zrusit."}
+              ? "Momentálne nie je vybraný konkrétny región."
+              : "Opätovne klepni na vybraný región, ak ho chceš zrušiť."}
           </Subtle>
         </View>
       </Card>

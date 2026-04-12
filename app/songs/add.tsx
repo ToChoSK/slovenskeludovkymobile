@@ -22,7 +22,7 @@ export default function AddSongScreen() {
     if (isSaving || !user) return
 
     setIsSaving(true)
-    setStatusMessage({ tone: "neutral", text: "Prebieha vytvaranie piesne..." })
+    setStatusMessage({ tone: "neutral", text: "Prebieha vytváranie piesne..." })
 
     try {
       const songId = await createSong({
@@ -35,10 +35,10 @@ export default function AddSongScreen() {
       })
 
       await refreshUser()
-      setStatusMessage({ tone: "success", text: "Piesen bola uspesne pridana." })
-      Alert.alert("Hotovo", "Piesen bola uspesne pridana.", [{ text: "OK", onPress: () => router.replace(`/songs/${songId}`) }])
+      setStatusMessage({ tone: "success", text: "Pieseň bola úspešne pridaná." })
+      Alert.alert("Hotovo", "Pieseň bola úspešne pridaná.", [{ text: "OK", onPress: () => router.replace(`/songs/${songId}`) }])
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Piesen sa nepodarilo pridat."
+      const message = error instanceof Error ? error.message : "Pieseň sa nepodarilo pridať."
       setStatusMessage({ tone: "error", text: message })
       Alert.alert("Chyba", message)
     } finally {
@@ -50,8 +50,8 @@ export default function AddSongScreen() {
     return (
       <Screen>
         <Card>
-          <Heading>Pridanie piesne nie je dostupne</Heading>
-          <Subtle>Vyplna len pre prihlasene roly s opravnenim `add_song`.</Subtle>
+          <Heading>Pridanie piesne nie je dostupné</Heading>
+          <Subtle>Táto obrazovka je dostupná len pre prihlásené roly s oprávnením `add_song`.</Subtle>
         </Card>
       </Screen>
     )
@@ -60,13 +60,13 @@ export default function AddSongScreen() {
   return (
     <Screen>
       <Card>
-        <Heading>Pridat piesen</Heading>
-        <Field value={title} onChangeText={setTitle} placeholder="Nazov piesne" />
+        <Heading>Pridať pieseň</Heading>
+        <Field value={title} onChangeText={setTitle} placeholder="Názov piesne" />
         <Field value={obec} onChangeText={setObec} placeholder="Obec" />
-        <Field value={region} onChangeText={setRegion} placeholder="Region" />
+        <Field value={region} onChangeText={setRegion} placeholder="Región" />
         <Field value={links} onChangeText={setLinks} placeholder="Jeden URL na riadok" multiline />
-        <Field value={textVersion} onChangeText={setTextVersion} placeholder="Prva textova verzia" multiline />
-        <Button label={isSaving ? "Ukladam..." : "Ulozit"} onPress={() => void handleSave()} disabled={!title.trim() || isSaving} loading={isSaving} />
+        <Field value={textVersion} onChangeText={setTextVersion} placeholder="Prvá textová verzia" multiline />
+        <Button label={isSaving ? "Ukladám..." : "Uložiť"} onPress={() => void handleSave()} disabled={!title.trim() || isSaving} loading={isSaving} />
         {statusMessage ? (
           <Subtle style={{ color: statusMessage.tone === "error" ? "#b42318" : statusMessage.tone === "success" ? "#0f7a3f" : "#5d7a92" }}>
             {statusMessage.text}

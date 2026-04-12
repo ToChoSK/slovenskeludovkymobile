@@ -39,10 +39,10 @@ export default function EditSongScreen() {
         links: links.split("\n").map((line) => line.trim()).filter(Boolean),
       })
 
-      setSongSaveStatus({ tone: "success", text: "Zmeny boli uspesne ulozene." })
-      Alert.alert("Hotovo", "Zmeny boli uspesne ulozene.", [{ text: "OK", onPress: () => router.replace(`/songs/${songId}`) }])
+      setSongSaveStatus({ tone: "success", text: "Zmeny boli úspešne uložené." })
+      Alert.alert("Hotovo", "Zmeny boli úspešne uložené.", [{ text: "OK", onPress: () => router.replace(`/songs/${songId}`) }])
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Zmeny sa nepodarilo ulozit."
+      const message = error instanceof Error ? error.message : "Zmeny sa nepodarilo uložiť."
       setSongSaveStatus({ tone: "error", text: message })
       Alert.alert("Chyba", message)
     } finally {
@@ -67,8 +67,8 @@ export default function EditSongScreen() {
     return (
       <Screen>
         <Card>
-          <Heading>Uprava nie je dostupna</Heading>
-          <Subtle>Sprava piesne je dostupna len pre roly s prislusnymi opravneniami.</Subtle>
+          <Heading>Úprava nie je dostupná</Heading>
+          <Subtle>Správa piesne je dostupná len pre roly s príslušnými oprávneniami.</Subtle>
         </Card>
       </Screen>
     )
@@ -77,14 +77,14 @@ export default function EditSongScreen() {
   return (
     <Screen>
       <Card>
-        <Heading>Sprava piesne</Heading>
-        <Field value={title} onChangeText={setTitle} placeholder="Nazov" />
+        <Heading>Správa piesne</Heading>
+        <Field value={title} onChangeText={setTitle} placeholder="Názov" />
         <Field value={obec} onChangeText={setObec} placeholder="Obec" />
-        <Field value={region} onChangeText={setRegion} placeholder="Region" />
+        <Field value={region} onChangeText={setRegion} placeholder="Región" />
         <Field value={links} onChangeText={setLinks} placeholder="Jeden URL na riadok" multiline />
         {canEditSong ? (
           <Button
-            label={isSavingSong ? "Ukladam zmeny..." : "Ulozit zmeny"}
+            label={isSavingSong ? "Ukladám zmeny..." : "Uložiť zmeny"}
             onPress={() => void handleSaveSong()}
             disabled={!title.trim() || isSavingSong}
             loading={isSavingSong}
@@ -95,11 +95,11 @@ export default function EditSongScreen() {
             {songSaveStatus.text}
           </Subtle>
         ) : null}
-        {canDeleteSong ? <Button label="Vymazat piesen" tone="danger" onPress={() => void deleteSong(songId).then(() => router.replace("/songs"))} /> : null}
+        {canDeleteSong ? <Button label="Vymazať pieseň" tone="danger" onPress={() => void deleteSong(songId).then(() => router.replace("/songs"))} /> : null}
       </Card>
 
       <Card>
-        <Heading size="h2">Textove verzie</Heading>
+        <Heading size="h2">Textové verzie</Heading>
         {textVersionIds.map((versionId) => (
           <Card key={versionId} style={{ backgroundColor: "#fff" }}>
             <Subtle>Verzia #{versionId}</Subtle>
@@ -108,10 +108,10 @@ export default function EditSongScreen() {
               onChangeText={(value) => setTextVersionTexts((current) => ({ ...current, [versionId]: value }))}
               multiline
             />
-            {canEditTextVersion ? <Button label="Ulozit verziu" onPress={() => void updateTextVersion(songId, versionId, textVersionTexts[versionId] ?? "")} /> : null}
+            {canEditTextVersion ? <Button label="Uložiť verziu" onPress={() => void updateTextVersion(songId, versionId, textVersionTexts[versionId] ?? "")} /> : null}
             {canDeleteTextVersion ? (
               <Button
-                label="Vymazat verziu"
+                label="Vymazať verziu"
                 tone="danger"
                 onPress={() =>
                   void deleteTextVersion(songId, versionId).then(() => {
