@@ -182,7 +182,6 @@ export default function SearchScreen() {
               <Image source={require("../../assets/ludovkylogo.png")} style={{ width: 42, height: 42, borderRadius: 12 }} resizeMode="contain" />
             </View>
             <View style={{ flex: 1, gap: 6 }}>
-              <Badge label="Rýchle vyhľadávanie" color="#2c88bf" />
               <Text style={{ fontSize: 30, lineHeight: 34, color: "#15354b", fontWeight: "900" }}>Hľadať</Text>
               <Text style={{ fontSize: 14, lineHeight: 20, color: "#55748a", fontWeight: "600" }}>
                 Názov, obec, región alebo priamo text piesne.

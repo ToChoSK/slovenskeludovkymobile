@@ -35,7 +35,8 @@
         "foregroundImage": "./assets/ludovkylogo.png",
         "backgroundColor": "#eef7fd"
       },
-      "package": "com.tochosk.slovenskeludovky"
+      "package": "com.tochosk.slovenskeludovky",
+      "versionCode": 2
     },
     "splash": {
       "image": "./assets/ludovkylogo.png",
