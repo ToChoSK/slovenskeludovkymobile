@@ -61,9 +61,9 @@ export default function SongsScreen() {
     <View style={{ padding: 16, gap: 12, paddingBottom: 16 }}>
       <Card>
         <View style={{ gap: 6 }}>
-          <Text style={{ fontSize: 12, fontWeight: "800", color: "#2b7fb9", letterSpacing: 1.1, textTransform: "uppercase" }}>Katalog</Text>
-          <Text style={{ fontSize: 24, fontWeight: "900", color: "#13324a" }}>Prehľadávaj regióny, názvy a metadáta.</Text>
-          <Subtle>Fulltext podľa textu piesní beží z domovskej obrazovky. Tu nájdeš rýchly katalóg a filter regiónov.</Subtle>
+          <Text style={{ fontSize: 12, fontWeight: "800", color: "#2b7fb9", letterSpacing: 1.1, textTransform: "uppercase" }}>Katalóg</Text>
+          <Text style={{ fontSize: 24, fontWeight: "900", color: "#13324a" }}>Objavujte ľudové piesne podľa názvu aj regiónu.</Text>
+          <Subtle>Vyhľadajte si obľúbenú pieseň, prechádzajte zbierku podľa krajov a rýchlo sa zorientujte v katalógu.</Subtle>
         </View>
 
         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
@@ -132,7 +132,6 @@ export default function SongsScreen() {
           placeholder="Filtruj podľa názvu, regiónu alebo obce..."
         />
       </Card>
-
     </View>
   )
 
@@ -143,7 +142,16 @@ export default function SongsScreen() {
       data={rows}
       keyExtractor={(item) => String(item.id)}
       ListHeaderComponent={header}
-      ListEmptyComponent={<View style={{ paddingHorizontal: 16 }}><Card><EmptyState title="Žiadne piesne" subtitle="Skús iný filter alebo sa vráť na domovskú obrazovku a použi fulltextové hľadanie." /></Card></View>}
+      ListEmptyComponent={
+        <View style={{ paddingHorizontal: 16 }}>
+          <Card>
+            <EmptyState
+              title="Žiadne piesne"
+              subtitle="Skús iný filter alebo sa vráť na domovskú obrazovku a použi fulltextové hľadanie."
+            />
+          </Card>
+        </View>
+      }
       renderItem={({ item }) => (
         <View style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
           <SongCard

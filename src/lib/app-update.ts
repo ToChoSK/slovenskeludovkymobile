@@ -4,7 +4,7 @@ import { MOBILE_APP_UPDATE_CONFIG_URL } from "@/lib/config"
 import type { MobileAppUpdateConfig, MobileAppUpdatePlatformConfig, MobileAppUpdatePrompt } from "@/types"
 
 function getInstalledAppVersion() {
-  return Constants.expoConfig?.version ?? Constants.nativeAppVersion ?? "0.0.0"
+  return Constants.nativeAppVersion ?? Constants.expoConfig?.version ?? "0.0.0"
 }
 
 function parseVersionParts(version: string) {
@@ -53,9 +53,6 @@ export async function loadMobileAppUpdatePrompt(): Promise<MobileAppUpdatePrompt
   const installedVersion = getInstalledAppVersion()
   const latestVersion = platformConfig.latestVersion
   const minSupportedVersion = platformConfig.minSupportedVersion ?? null
-  const shouldPrompt = compareVersions(installedVersion, latestVersion) < 0
-  if (!shouldPrompt) return null
-
   return {
     storeUrl: platformConfig.storeUrl,
     title: platformConfig.title?.trim() || "Je dostupná nová verzia aplikácie.",
