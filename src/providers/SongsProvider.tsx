@@ -89,6 +89,10 @@ export function SongsProvider({ children }: { children: ReactNode }) {
         setSongs(bundle.songs)
         setMeta(bundle.meta)
         setError(null)
+        // Pre-warm search index in background so first search doesn't block
+        void loadOfflineSearchIndex().then((idx) => {
+          searchIndexRef.current = idx
+        })
       })
       .catch((reason: Error) => {
         if (!alive) return

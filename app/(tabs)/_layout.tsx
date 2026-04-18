@@ -2,6 +2,7 @@ import { Tabs } from "expo-router"
 import { Ionicons } from "@expo/vector-icons"
 import { Text, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useHasPrivilege } from "@/lib/privileges"
 import { useAuth } from "@/providers/AuthProvider"
 
@@ -28,6 +29,8 @@ function TabIcon({ label, icon, focused }: { label: string; icon: keyof typeof I
 export default function TabsLayout() {
   const { user } = useAuth()
   const canAddSong = useHasPrivilege(user, "add_song")
+  const insets = useSafeAreaInsets()
+  const bottomOffset = Math.max(insets.bottom, 14)
 
   return (
     <Tabs
@@ -41,8 +44,8 @@ export default function TabsLayout() {
           position: "absolute",
           left: 14,
           right: 14,
-          bottom: 14,
-          height: 68,
+          bottom: bottomOffset,
+          height: 72,
           borderRadius: 24,
           borderTopWidth: 0,
           backgroundColor: "#123550",

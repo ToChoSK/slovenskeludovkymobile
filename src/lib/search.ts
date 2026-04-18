@@ -1,3 +1,4 @@
+import { InteractionManager } from "react-native"
 import type { AllSongsRow, Song } from "@/types"
 
 export type SongSearchIndexEntry = {
@@ -105,25 +106,30 @@ export async function searchSongsWithProgress(
   const normalizedQuery = normalizeSearchText(query)
   if (!normalizedQuery) return []
 
-  const chunkSize = options?.chunkSize ?? 220
+  const chunkSize = options?.chunkSize ?? 200
   const matches: number[] = []
 
   for (let offset = 0; offset < index.length; offset += chunkSize) {
     if (options?.signal?.cancelled) return []
-    const chunk = index.slice(offset, offset + chunkSize)
+    const end = Math.min(offset + chunkSize, index.length)
 
-    for (const entry of chunk) {
-      if (entry.fulltextKey.includes(normalizedQuery)) matches.push(entry.songId)
+    for (let i = offset; i < end; i++) {
+      if (index[i].fulltextKey.includes(normalizedQuery)) matches.push(index[i].songId)
     }
 
-    const processed = Math.min(offset + chunk.length, index.length)
+    const processed = end
     options?.onProgress?.({
       processed,
       total: index.length,
       ratio: index.length === 0 ? 1 : processed / index.length,
     })
 
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    // Yield to the UI thread so animations/touches stay responsive
+    await new Promise<void>((resolve) => {
+      const handle = InteractionManager.runAfterInteractions(() => resolve())
+      // Fallback timeout in case InteractionManager doesn't fire quickly
+      setTimeout(() => { handle.cancel(); resolve() }, 8)
+    })
   }
 
   return matches

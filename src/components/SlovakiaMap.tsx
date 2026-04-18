@@ -1,5 +1,5 @@
-import { useMemo } from "react"
-import { ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { useEffect, useMemo, useRef } from "react"
+import { Animated, ScrollView, Text, TouchableOpacity, View } from "react-native"
 import Svg, { G, Path } from "react-native-svg"
 import { Button } from "@/components/ui"
 import { REGION_SVG_XML } from "@/lib/region-svg-xml"
@@ -57,6 +57,23 @@ export function SlovakiaMap({ metadata, selectedRegion, onSelectRegion, onOpenRe
   const regionCounts = useRegionCounts(metadata)
   const hasSelectedRegion = selectedRegion !== "all"
   const selectedLabel = selectedRegion === "all" ? "Slovensko" : (REGION_META[selectedRegion as RegionKey]?.label ?? selectedRegion)
+  const buttonRef = useRef<View>(null)
+  const buttonPulse = useRef(new Animated.Value(1)).current
+
+  // Scroll to and highlight button when region is selected
+  useEffect(() => {
+    if (hasSelectedRegion && buttonRef.current) {
+      buttonRef.current.measureInWindow((_x, y) => {
+        // Pulse animation to draw attention
+        Animated.sequence([
+          Animated.timing(buttonPulse, { toValue: 1.05, duration: 200, useNativeDriver: true }),
+          Animated.timing(buttonPulse, { toValue: 1, duration: 200, useNativeDriver: true }),
+          Animated.timing(buttonPulse, { toValue: 1.05, duration: 200, useNativeDriver: true }),
+          Animated.timing(buttonPulse, { toValue: 1, duration: 200, useNativeDriver: true }),
+        ]).start()
+      })
+    }
+  }, [selectedRegion])
 
   return (
     <View style={{ gap: 14 }}>
@@ -135,11 +152,13 @@ export function SlovakiaMap({ metadata, selectedRegion, onSelectRegion, onOpenRe
 
         <Text style={{ fontSize: 13, color: "#63819a" }}>Klepni priamo na región v mape alebo použi rýchly výber nižšie.</Text>
 
-        <Button
-          label={selectedRegion === "all" ? "Zobraziť všetky piesne" : `Zobraziť piesne: ${selectedLabel}`}
-          onPress={() => onOpenRegionSongs?.(selectedRegion)}
-          disabled={!onOpenRegionSongs}
-        />
+        <Animated.View ref={buttonRef} style={{ transform: [{ scale: buttonPulse }] }}>
+          <Button
+            label={selectedRegion === "all" ? "Zobraziť všetky piesne" : `Zobraziť piesne: ${selectedLabel}`}
+            onPress={() => onOpenRegionSongs?.(selectedRegion)}
+            disabled={!onOpenRegionSongs}
+          />
+        </Animated.View>
 
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
           {ASSET_REGION_KEYS.map((key) => {

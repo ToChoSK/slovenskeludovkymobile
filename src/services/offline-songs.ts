@@ -11,6 +11,9 @@ let overridesPromise: Promise<OfflineSongOverrides | null> | null = null
 let bundledSongsMapCache: Map<number, Song> | null = null
 let bundledSongsMapPromise: Promise<Map<number, Song>> | null = null
 
+// Pre-compute catalog at module level to avoid re-processing on every call
+const precomputedCatalog: SongCatalogItem[] = normalizeCatalogSongs(bundledCatalog as unknown as any[])
+
 function normalizeSong(raw: any): Song {
   return {
     creationTime: raw.creationTime ?? new Date().toISOString(),
@@ -130,8 +133,23 @@ function applyOverridesToSearchIndex(baseIndex: SongSearchIndexEntry[], override
   return Array.from(map.values()).sort((a, b) => a.songId - b.songId)
 }
 
-function loadBundledSearchIndex(): SongSearchIndexEntry[] {
-  return require("../../songs.search-index.json") as SongSearchIndexEntry[]
+let bundledSearchIndexCache: SongSearchIndexEntry[] | null = null
+let bundledSearchIndexPromise: Promise<SongSearchIndexEntry[]> | null = null
+
+function loadBundledSearchIndex(): Promise<SongSearchIndexEntry[]> {
+  if (bundledSearchIndexCache) return Promise.resolve(bundledSearchIndexCache)
+  if (!bundledSearchIndexPromise) {
+    bundledSearchIndexPromise = new Promise<SongSearchIndexEntry[]>((resolve) => {
+      // Use setTimeout to move the synchronous require() off the current frame
+      setTimeout(() => {
+        const data = require("../../songs.search-index.json") as SongSearchIndexEntry[]
+        bundledSearchIndexCache = data
+        bundledSearchIndexPromise = null
+        resolve(data)
+      }, 0)
+    })
+  }
+  return bundledSearchIndexPromise
 }
 
 async function loadBundledSongsMap() {
@@ -156,10 +174,9 @@ async function loadBundledSongsMap() {
 }
 
 export async function ensureOfflineDataset(): Promise<OfflineDatasetBundle> {
-  const [cachedMeta, overrides] = await Promise.all([readFile<OfflineDatasetMeta>(META_PATH), readOverrides()])
-  const baseSongs = normalizeCatalogSongs(bundledCatalog as unknown as any[])
-  const songs = applyOverridesToCatalog(baseSongs, overrides)
-  const meta = cachedMeta ?? {
+  const overrides = await readOverrides()
+  const songs = applyOverridesToCatalog(precomputedCatalog, overrides)
+  const meta: OfflineDatasetMeta = {
     bundledVersion: bundledDatasetMeta.version ?? null,
     downloadedAt: new Date().toISOString(),
     source: "bundled" as const,
@@ -168,8 +185,13 @@ export async function ensureOfflineDataset(): Promise<OfflineDatasetBundle> {
 }
 
 export async function loadOfflineSearchIndex(): Promise<SongSearchIndexEntry[]> {
-  const overrides = await readOverrides()
-  return applyOverridesToSearchIndex(loadBundledSearchIndex(), overrides)
+  const [overrides, baseIndex] = await Promise.all([readOverrides(), loadBundledSearchIndex()])
+  return applyOverridesToSearchIndex(baseIndex, overrides)
+}
+
+/** Pre-warm the search index in background so first search is instant */
+export function preloadSearchIndex(): void {
+  void loadBundledSearchIndex()
 }
 
 export async function loadOfflineSong(songId: number): Promise<Song | null> {

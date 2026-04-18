@@ -1,15 +1,19 @@
+import { Ionicons } from "@expo/vector-icons"
 import { router } from "expo-router"
-import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native"
 import { Badge, Button, Card, EmptyState, Field, Loading, ProgressBar, SongCard } from "@/components/ui"
+import { OnboardingOverlay } from "@/components/OnboardingOverlay"
 import { loadMobileAppUpdatePrompt } from "@/lib/app-update"
 import { useSongs } from "@/providers/SongsProvider"
-import type { MobileAppUpdatePrompt } from "@/types"
+import type { MobileAppUpdatePrompt, SongCatalogItem } from "@/types"
+
+type SearchMode = "title" | "fulltext"
 
 export default function SearchScreen() {
-  const { songs, loading, error, searchSongs } = useSongs()
+  const { songs, loading, error, searchSongs, titleSuggestions } = useSongs()
   const [query, setQuery] = useState("")
+  const [searchMode, setSearchMode] = useState<SearchMode>("title")
   const [searching, setSearching] = useState(false)
   const [progress, setProgress] = useState(0)
   const [results, setResults] = useState<number[]>([])
@@ -24,6 +28,23 @@ export default function SearchScreen() {
         .filter((song): song is NonNullable<typeof song> => !!song)
         .sort((a, b) => b.viewCount - a.viewCount || a.title.localeCompare(b.title, "sk", { sensitivity: "base" })),
     [results, songs],
+  )
+
+  // Title search results (instant)
+  const titleResults = useMemo(() => {
+    if (searchMode !== "title" || !query.trim()) return []
+    return titleSuggestions(query, 20)
+  }, [query, searchMode, titleSuggestions])
+
+  // Top songs for quick access
+  const topSongs = useMemo(
+    () => [...songs].sort((a, b) => b.viewCount - a.viewCount).slice(0, 6),
+    [songs],
+  )
+
+  const favoriteSongs = useMemo(
+    () => [...songs].sort((a, b) => b.favoriteCount - a.favoriteCount).slice(0, 6),
+    [songs],
   )
 
   async function runFulltextSearch(nextQuery?: string) {
@@ -69,36 +90,47 @@ export default function SearchScreen() {
     }
   }, [])
 
+  // Clear fulltext results when switching modes or clearing query
   useEffect(() => {
-    const trimmed = query.trim()
-    if (!trimmed) {
+    if (searchMode !== "fulltext") {
       if (searchSignalRef.current) searchSignalRef.current.cancelled = true
       setSearching(false)
       setResults([])
       setSearchedQuery("")
       setProgress(0)
-      return
     }
+  }, [searchMode])
 
-    const timeoutId = setTimeout(() => {
-      void runFulltextSearch(trimmed)
-    }, 380)
-
-    return () => clearTimeout(timeoutId)
+  // Clear fulltext results when query is emptied
+  useEffect(() => {
+    if (!query.trim() && searchMode === "fulltext") {
+      if (searchSignalRef.current) searchSignalRef.current.cancelled = true
+      setSearching(false)
+      setResults([])
+      setSearchedQuery("")
+      setProgress(0)
+    }
   }, [query])
 
   if (loading) {
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: "#f4fbff" }} contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 120 }}>
+      <ScrollView style={{ flex: 1, backgroundColor: "#f4fbff" }} contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 140 }}>
         <Card>
-          <Loading label="Načítavam lokálny katalóg..." />
+          <Loading label="Načítavam katalóg piesní..." />
         </Card>
       </ScrollView>
     )
   }
 
+  const hasQuery = query.trim().length > 0
+  const showTitleResults = searchMode === "title" && hasQuery && titleResults.length > 0
+  const showFulltextResults = searchMode === "fulltext" && searchedQuery
+  const showQuickAccess = !hasQuery
+
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#f4fbff" }} contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 120 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#f4fbff" }} contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 140 }}>
+      <OnboardingOverlay />
+
       {appUpdatePrompt ? (
         <Card>
           <View style={{ gap: 8 }}>
@@ -112,167 +144,74 @@ export default function SearchScreen() {
         </Card>
       ) : null}
 
-      <LinearGradient
-        colors={["#f8fdff", "#eef8ff", "#e1f4ff"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      {/* Search card */}
+      <View
         style={{
-          borderRadius: 34,
-          padding: 18,
-          gap: 16,
-          overflow: "hidden",
+          borderRadius: 28,
+          backgroundColor: "#ffffff",
           borderWidth: 1,
-          borderColor: "#d2ebf8",
+          borderColor: "#d5ecf9",
+          padding: 16,
+          gap: 14,
           shadowColor: "#5fa8cf",
-          shadowOffset: { width: 0, height: 16 },
-          shadowOpacity: 0.12,
-          shadowRadius: 28,
-          elevation: 6,
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.08,
+          shadowRadius: 20,
+          elevation: 4,
         }}
       >
-        <View
-          style={{
-            position: "absolute",
-            right: -18,
-            top: -12,
-            width: 128,
-            height: 128,
-            borderRadius: 999,
-            backgroundColor: "rgba(123, 211, 255, 0.20)",
-          }}
-        />
-        <View
-          style={{
-            position: "absolute",
-            left: -36,
-            bottom: -54,
-            width: 168,
-            height: 168,
-            borderRadius: 999,
-            backgroundColor: "rgba(182, 230, 255, 0.28)",
-          }}
-        />
-        <View
-          style={{
-            position: "absolute",
-            right: 56,
-            bottom: 34,
-            width: 76,
-            height: 76,
-            borderRadius: 24,
-            backgroundColor: "rgba(255, 255, 255, 0.44)",
-            transform: [{ rotate: "18deg" }],
-          }}
-        />
-
-        <View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 12, flex: 1 }}>
-            <View
-              style={{
-                width: 58,
-                height: 58,
-                borderRadius: 18,
-                backgroundColor: "rgba(255,255,255,0.84)",
-                alignItems: "center",
-                justifyContent: "center",
-                borderWidth: 1,
-                borderColor: "#d7edf8",
-              }}
-            >
-              <Image source={require("../../assets/ludovkylogo.png")} style={{ width: 42, height: 42, borderRadius: 12 }} resizeMode="contain" />
-            </View>
-            <View style={{ flex: 1, gap: 6 }}>
-              <Text style={{ fontSize: 30, lineHeight: 34, color: "#15354b", fontWeight: "900" }}>Hľadať</Text>
-              <Text style={{ fontSize: 14, lineHeight: 20, color: "#55748a", fontWeight: "600" }}>
-                Názov, obec, región alebo priamo text piesne.
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              borderRadius: 18,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-              backgroundColor: "rgba(255,255,255,0.72)",
-              borderWidth: 1,
-              borderColor: "#d7edf8",
-              minWidth: 84,
-            }}
-          >
-            <Text style={{ fontSize: 11, fontWeight: "800", color: "#6d8ca0", textTransform: "uppercase", letterSpacing: 0.8 }}>Katalóg</Text>
-            <Text style={{ fontSize: 20, fontWeight: "900", color: "#16374e", marginTop: 2 }}>{songs.length}</Text>
-            <Text style={{ fontSize: 12, color: "#5f8096", fontWeight: "700" }}>piesní</Text>
+        {/* Header */}
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+          <Image source={require("../../assets/ludovkylogo.png")} style={{ width: 40, height: 40, borderRadius: 12 }} resizeMode="contain" />
+          <View style={{ flex: 1 }}>
+            <Text style={{ fontSize: 22, color: "#15354b", fontWeight: "900" }}>Hľadať piesne</Text>
+            <Text style={{ fontSize: 13, color: "#7a98ad" }}>{songs.length} piesní v katalógu</Text>
           </View>
         </View>
 
-        <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
-          <SearchHint label="Názov piesne" />
-          <SearchHint label="Obec a región" />
-          <SearchHint label="Úryvok textu" />
+        {/* Search mode toggle */}
+        <View style={{ flexDirection: "row", borderRadius: 16, backgroundColor: "#eef7fd", padding: 4, gap: 4 }}>
+          <SearchModeTab
+            label="Podľa názvu"
+            icon="text-outline"
+            active={searchMode === "title"}
+            onPress={() => setSearchMode("title")}
+          />
+          <SearchModeTab
+            label="Podľa textu"
+            icon="document-text-outline"
+            active={searchMode === "fulltext"}
+            onPress={() => setSearchMode("fulltext")}
+          />
         </View>
 
-        <View
-          style={{
-            borderRadius: 28,
-            backgroundColor: "rgba(255,255,255,0.72)",
-            borderWidth: 1,
-            borderColor: "#d5ecf9",
-            padding: 14,
-            gap: 12,
-          }}
-        >
-          <Field value={query} onChangeText={setQuery} placeholder="Napíš názov, obec alebo časť textu piesne" />
+        {/* Search input */}
+        <Field
+          value={query}
+          onChangeText={setQuery}
+          placeholder={searchMode === "title" ? "Napíš názov piesne..." : "Napíš úryvok textu piesne..."}
+        />
 
+        {searchMode === "fulltext" && (
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <View style={{ flex: 1.4 }}>
-              <Button label="Vyhľadať" onPress={() => void runFulltextSearch()} loading={searching} />
-            </View>
             <View style={{ flex: 1 }}>
-              <Button label="Katalóg piesní" tone="secondary" onPress={() => router.push("/(tabs)/songs")} />
+              <Button label="Vyhľadať v textoch" onPress={() => void runFulltextSearch()} loading={searching} />
             </View>
           </View>
-        </View>
+        )}
 
-        {searching ? <ProgressBar progress={progress} label={`Prehľadávam index... ${Math.round(progress * 100)} %`} /> : null}
-      </LinearGradient>
+        {searching && searchMode === "fulltext" ? (
+          <ProgressBar progress={progress} label={`Prehľadávam texty... ${Math.round(progress * 100)} %`} />
+        ) : null}
+      </View>
 
-      <Pressable onPress={() => void Linking.openURL("https://slovenskeludovky.sk")} style={({ pressed }) => ({ opacity: pressed ? 0.96 : 1 })}>
-        <LinearGradient
-          colors={["#edf9ff", "#f8fdff"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={{
-            borderRadius: 24,
-            padding: 14,
-            borderWidth: 1,
-            borderColor: "#d7edf8",
-            gap: 10,
-          }}
-        >
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <Image source={require("../../assets/ludovkylogo.png")} style={{ width: 34, height: 34, borderRadius: 8 }} resizeMode="contain" />
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 16, fontWeight: "900", color: "#123a58" }}>Viac na slovenskeludovky.sk</Text>
-              <Text style={{ fontSize: 13, color: "#456984" }}>Albumy, obľúbené piesne a živá databáza.</Text>
-            </View>
-          </View>
-        </LinearGradient>
-      </Pressable>
-
-      {error ? (
+      {/* Title search results (instant) */}
+      {showTitleResults ? (
         <Card>
-          <Text style={{ fontSize: 15, fontWeight: "800", color: "#8f2d1c" }}>Dáta sa nepodarilo načítať.</Text>
-          <Text style={{ color: "#7d6f63", fontSize: 14 }}>{error}</Text>
-        </Card>
-      ) : null}
-
-      <Card>
-        {!searchedQuery ? (
-          <EmptyState title="Začni hľadať" subtitle="Napíš názov, obec alebo časť textu piesne a výsledky sa zobrazia automaticky." />
-        ) : !searching && resultSongs.length === 0 ? (
-          <EmptyState title="Bez výsledkov" subtitle="Skús iný názov, obec alebo časť textu." />
-        ) : (
-          resultSongs.slice(0, 20).map((song) => (
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <Text style={{ fontSize: 14, fontWeight: "800", color: "#5d7a92" }}>Výsledky ({titleResults.length})</Text>
+          </View>
+          {titleResults.map((song) => (
             <SongCard
               key={song.id}
               title={song.title}
@@ -282,29 +221,181 @@ export default function SearchScreen() {
               viewCount={song.viewCount}
               onPress={() => router.push(`/songs/${song.id}`)}
             />
-          ))
-        )}
-        {resultSongs.length > 20 ? (
-          <Button label={`Otvoriť v zozname (${resultSongs.length})`} tone="secondary" onPress={() => router.push({ pathname: "/(tabs)/songs", params: { query: searchedQuery } })} />
-        ) : null}
-      </Card>
+          ))}
+        </Card>
+      ) : null}
+
+      {/* Title search - no results */}
+      {searchMode === "title" && hasQuery && titleResults.length === 0 ? (
+        <Card>
+          <EmptyState title="Bez výsledkov" subtitle="Skús iný názov alebo prepni na hľadanie podľa textu." />
+        </Card>
+      ) : null}
+
+      {/* Fulltext results */}
+      {showFulltextResults ? (
+        <Card>
+          {!searching && resultSongs.length === 0 ? (
+            <EmptyState title="Bez výsledkov" subtitle="Skús iný text alebo prepni na hľadanie podľa názvu." />
+          ) : (
+            <>
+              {resultSongs.length > 0 && (
+                <Text style={{ fontSize: 14, fontWeight: "800", color: "#5d7a92" }}>Výsledky ({resultSongs.length})</Text>
+              )}
+              {resultSongs.slice(0, 20).map((song) => (
+                <SongCard
+                  key={song.id}
+                  title={song.title}
+                  region={song.region}
+                  obec={song.obec}
+                  favoriteCount={song.favoriteCount}
+                  viewCount={song.viewCount}
+                  onPress={() => router.push(`/songs/${song.id}`)}
+                />
+              ))}
+              {resultSongs.length > 20 ? (
+                <Button label={`Otvoriť v zozname (${resultSongs.length})`} tone="secondary" onPress={() => router.push({ pathname: "/(tabs)/songs", params: { query: searchedQuery } })} />
+              ) : null}
+            </>
+          )}
+        </Card>
+      ) : null}
+
+      {error ? (
+        <Card>
+          <Text style={{ fontSize: 15, fontWeight: "800", color: "#8f2d1c" }}>Dáta sa nepodarilo načítať.</Text>
+          <Text style={{ color: "#7d6f63", fontSize: 14 }}>{error}</Text>
+        </Card>
+      ) : null}
+
+      {/* Quick access sections */}
+      {showQuickAccess ? (
+        <>
+          {/* Top viewed songs */}
+          <View style={{ gap: 10 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 4 }}>
+              <Text style={{ fontSize: 16, fontWeight: "900", color: "#13324a" }}>🔥 Najhľadanejšie</Text>
+              <Pressable onPress={() => router.push("/(tabs)/songs")}>
+                <Text style={{ fontSize: 13, fontWeight: "700", color: "#2e89c7" }}>Všetky →</Text>
+              </Pressable>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10, paddingHorizontal: 2 }}>
+              {topSongs.map((song) => (
+                <QuickSongCard key={song.id} song={song} onPress={() => router.push(`/songs/${song.id}`)} />
+              ))}
+            </ScrollView>
+          </View>
+
+          {/* Top favorited songs */}
+          <View style={{ gap: 10 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 4 }}>
+              <Text style={{ fontSize: 16, fontWeight: "900", color: "#13324a" }}>❤️ Obľúbené</Text>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10, paddingHorizontal: 2 }}>
+              {favoriteSongs.map((song) => (
+                <QuickSongCard key={song.id} song={song} onPress={() => router.push(`/songs/${song.id}`)} />
+              ))}
+            </ScrollView>
+          </View>
+
+          {/* Quick links */}
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <Pressable
+              onPress={() => router.push("/(tabs)/songs")}
+              style={{ flex: 1, borderRadius: 20, backgroundColor: "#ffffff", borderWidth: 1, borderColor: "#d5ecf9", padding: 16, alignItems: "center", gap: 8 }}
+            >
+              <Ionicons name="musical-notes" size={24} color="#2e89c7" />
+              <Text style={{ fontSize: 13, fontWeight: "800", color: "#15354b" }}>Katalóg piesní</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => router.push("/(tabs)/map")}
+              style={{ flex: 1, borderRadius: 20, backgroundColor: "#ffffff", borderWidth: 1, borderColor: "#d5ecf9", padding: 16, alignItems: "center", gap: 8 }}
+            >
+              <Ionicons name="map" size={24} color="#9b59b6" />
+              <Text style={{ fontSize: 13, fontWeight: "800", color: "#15354b" }}>Mapa regiónov</Text>
+            </Pressable>
+          </View>
+
+          {/* Web link */}
+          <Pressable onPress={() => void Linking.openURL("https://slovenskeludovky.sk")} style={({ pressed }) => ({ opacity: pressed ? 0.96 : 1 })}>
+            <View
+              style={{
+                borderRadius: 20,
+                padding: 14,
+                borderWidth: 1,
+                borderColor: "#d7edf8",
+                backgroundColor: "#ffffff",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              <Image source={require("../../assets/ludovkylogo.png")} style={{ width: 30, height: 30, borderRadius: 8 }} resizeMode="contain" />
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 14, fontWeight: "800", color: "#123a58" }}>slovenskeludovky.sk</Text>
+                <Text style={{ fontSize: 12, color: "#7a98ad" }}>Albumy, obľúbené a živá databáza</Text>
+              </View>
+              <Ionicons name="open-outline" size={16} color="#7a98ad" />
+            </View>
+          </Pressable>
+        </>
+      ) : null}
     </ScrollView>
   )
 }
 
-function SearchHint({ label }: { label: string }) {
+function SearchModeTab({ label, icon, active, onPress }: { label: string; icon: keyof typeof Ionicons.glyphMap; active: boolean; onPress: () => void }) {
   return (
-    <View
+    <Pressable
+      onPress={onPress}
       style={{
-        borderRadius: 999,
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        backgroundColor: "rgba(255,255,255,0.64)",
-        borderWidth: 1,
-        borderColor: "#d8eef9",
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 6,
+        paddingVertical: 10,
+        borderRadius: 12,
+        backgroundColor: active ? "#ffffff" : "transparent",
+        shadowColor: active ? "#2d5874" : "transparent",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: active ? 0.1 : 0,
+        shadowRadius: 8,
+        elevation: active ? 2 : 0,
       }}
     >
-      <Text style={{ fontSize: 12, fontWeight: "800", color: "#3b6f8d" }}>{label}</Text>
-    </View>
+      <Ionicons name={icon} size={14} color={active ? "#2e89c7" : "#7a98ad"} />
+      <Text style={{ fontSize: 13, fontWeight: "800", color: active ? "#15354b" : "#7a98ad" }}>{label}</Text>
+    </Pressable>
+  )
+}
+
+function QuickSongCard({ song, onPress }: { song: SongCatalogItem; onPress: () => void }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => ({
+        width: 160,
+        borderRadius: 20,
+        backgroundColor: "#ffffff",
+        borderWidth: 1,
+        borderColor: "#d8eaf6",
+        padding: 14,
+        gap: 6,
+        opacity: pressed ? 0.9 : 1,
+        shadowColor: "#2d5874",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.06,
+        shadowRadius: 12,
+        elevation: 2,
+      })}
+    >
+      <Text style={{ fontSize: 14, fontWeight: "900", color: "#13324a" }} numberOfLines={2}>{song.title}</Text>
+      <Text style={{ fontSize: 11, color: "#7a98ad" }} numberOfLines={1}>{song.region ?? "Slovensko"}</Text>
+      <View style={{ flexDirection: "row", gap: 8, marginTop: 2 }}>
+        <Text style={{ fontSize: 11, color: "#7391a9" }}>👁 {song.viewCount}</Text>
+        <Text style={{ fontSize: 11, color: "#7391a9" }}>❤️ {song.favoriteCount}</Text>
+      </View>
+    </Pressable>
   )
 }

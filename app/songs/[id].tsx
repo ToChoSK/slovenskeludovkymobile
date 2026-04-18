@@ -56,6 +56,7 @@ export default function SongDetailScreen() {
 
   useEffect(() => {
     let alive = true
+    setSong(null)
     setLoadError(null)
     void (async () => {
       try {
@@ -156,7 +157,11 @@ export default function SongDetailScreen() {
   }, [catalogSongs, selectedNextSongId])
 
   function handleBack() {
-    router.replace("/(tabs)/songs")
+    if (router.canGoBack()) {
+      router.back()
+    } else {
+      router.replace("/(tabs)/songs")
+    }
   }
 
   function ensureLikeAllowed() {
