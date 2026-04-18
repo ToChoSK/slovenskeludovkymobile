@@ -36,7 +36,7 @@
         "backgroundColor": "#eef7fd"
       },
       "package": "com.tochosk.slovenskeludovky",
-      "versionCode": 2
+      "versionCode": 3
     },
     "splash": {
       "image": "./assets/ludovkylogo.png",

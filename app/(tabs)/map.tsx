@@ -1,6 +1,6 @@
 import { router } from "expo-router"
-import { useState } from "react"
-import { Text, View } from "react-native"
+import { useRef, useState } from "react"
+import { ScrollView, Text, View } from "react-native"
 import { Card, HeroCard, Screen, Subtle } from "@/components/ui"
 import { SlovakiaMap } from "@/components/SlovakiaMap"
 import { REGION_META, type RegionKey } from "@/lib/regions"
@@ -10,9 +10,15 @@ export default function MapScreen() {
   const { metadata } = useSongs()
   const [selectedRegion, setSelectedRegion] = useState<RegionKey>("slovensko")
   const selectedRegionMeta = REGION_META[selectedRegion]
+  const scrollRef = useRef<ScrollView>(null)
+
+  function handleSelectRegion(region: string | "all") {
+    scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
+    setSelectedRegion(region === "all" ? "slovensko" : (region as RegionKey))
+  }
 
   return (
-    <Screen>
+    <Screen scrollRef={scrollRef}>
       <HeroCard>
         <Text style={{ fontSize: 30, lineHeight: 34, color: "#f4fbff", fontWeight: "900" }}>Mapa regionov</Text>
         <Text style={{ fontSize: 15, lineHeight: 22, color: "rgba(235,248,255,0.82)" }}>
@@ -28,9 +34,7 @@ export default function MapScreen() {
         <SlovakiaMap
           metadata={metadata}
           selectedRegion={selectedRegion === "slovensko" ? "all" : selectedRegion}
-          onSelectRegion={(region) => {
-            setSelectedRegion(region === "all" ? "slovensko" : (region as RegionKey))
-          }}
+          onSelectRegion={handleSelectRegion}
           onOpenRegionSongs={(region) => {
             if (region === "all") {
               router.push("/(tabs)/songs")

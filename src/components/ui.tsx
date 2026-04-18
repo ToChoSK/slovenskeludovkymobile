@@ -1,11 +1,17 @@
 import * as Haptics from "expo-haptics"
 import { LinearGradient } from "expo-linear-gradient"
-import type { PropsWithChildren, ReactNode } from "react"
+import type { PropsWithChildren, ReactNode, RefObject } from "react"
 import { ActivityIndicator, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View } from "react-native"
 
-export function Screen({ children, onRefresh, refreshing }: PropsWithChildren<{ onRefresh?: () => void; refreshing?: boolean }>) {
+export function Screen({
+  children,
+  onRefresh,
+  refreshing,
+  scrollRef,
+}: PropsWithChildren<{ onRefresh?: () => void; refreshing?: boolean; scrollRef?: RefObject<ScrollView | null> }>) {
   return (
     <ScrollView
+      ref={scrollRef}
       style={styles.screen}
       contentContainerStyle={styles.content}
       refreshControl={onRefresh ? <RefreshControl refreshing={refreshing ?? false} onRefresh={onRefresh} tintColor="#3b9ed8" /> : undefined}
