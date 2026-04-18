@@ -4,7 +4,7 @@
     "slug": "slovenskeludovky",
     "scheme": "slovenskeludovkymobile",
     "owner": "tochosk",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -36,7 +36,7 @@
         "backgroundColor": "#eef7fd"
       },
       "package": "com.tochosk.slovenskeludovky",
-      "versionCode": 3
+      "versionCode": 4
     },
     "splash": {
       "image": "./assets/ludovkylogo.png",

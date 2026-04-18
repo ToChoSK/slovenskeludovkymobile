@@ -1536,7 +1536,12 @@
     "links": [
       "https://www.youtube.com/watch?v=z6hWmzHV74w"
     ],
-    "nextSongs": [],
+    "nextSongs": [
+      {
+        "id": 6776,
+        "likes": 0
+      }
+    ],
     "obec": "Bohdanovce",
     "region": "Abov",
     "textVersions": [
@@ -1552,7 +1557,7 @@
     ],
     "title": "Never parobkovi ej jako zlemu hadu",
     "userAddedId": null,
-    "viewCount": 2
+    "viewCount": 5
   },
   {
     "creationTime": {
@@ -4993,7 +4998,7 @@
     ],
     "title": "Prepelička",
     "userAddedId": null,
-    "viewCount": 18
+    "viewCount": 41
   },
   {
     "creationTime": {

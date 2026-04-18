@@ -1770,7 +1770,7 @@
     ],
     "nextSongs": [],
     "obec": null,
-    "region": null,
+    "region": "liptov",
     "textVersions": [
       {
         "creationTime": {
@@ -1780,11 +1780,20 @@
         "id": 1,
         "likes": 0,
         "text": "1.\n\nIšli dievky ľan trhať, natrhali samú vňať,\n\n[:u starieho barana tancovali do rána.:]\n\n2.\n\nPrišli domov ustatie a čižmičky zodratie,\n\n[:otec chytil palicu a vyčistil Hanicu.:]\n\n3.\n\nMoja milá, čuj, čuj, čuj, len sa dobre vytancuj,\n\n[:abys bola červená ako ruža štepená.:]\n\n4.\n\nMoja milá láskavá pri potôčku zaspala,\n\n[:prišiel ku nej láskavý, obidvaja zaspali.:]\n\n5.\n\nMojej milej nesvedčí vyšivanou na čepci,\n\n[:krajšie by jej svedčilo kravské lajno na čelo.:]\n\n6.\n\nMoja žena taká je, keď má robiť, chorá je,\n\n[:keď organy zahrajú, nožičky jej virgajú.:]\n\n7.\n\nMoja žena taký pes, nechcela mi švábku jesť,\n\n[:len červené jabĺčka, aby bola ľahučká.:]\n\n8.\n\nEj, Marína, Marína, krátka nám je perina,\n\n[:čím sa viacej krčíme, tým je nám väčšia zima.:]"
+      },
+      {
+        "creationTime": {
+          "_seconds": 1776179001,
+          "_nanoseconds": 698000000
+        },
+        "id": 2,
+        "likes": 1,
+        "text": "Išli dievky ľan trhať, natrhali samú vňať,\n[:u starieho barana tancovali do rána.:]\n\nPrišli domov ustatie a čižmičky zodratie,\n[:otec chytil palicu a vyčistil Hanicu.:]"
       }
     ],
     "title": "Išli dievky ľan trhať",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 3
   },
   {
     "creationTime": {

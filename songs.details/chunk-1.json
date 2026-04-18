@@ -746,7 +746,16 @@
     "links": [
       "https://pesnicky.orava.sk/component/mjoosic/?view=song&id=10511"
     ],
-    "nextSongs": [],
+    "nextSongs": [
+      {
+        "id": 19416,
+        "likes": 1
+      },
+      {
+        "id": 51219,
+        "likes": 2
+      }
+    ],
     "obec": null,
     "region": "Liptov",
     "textVersions": [
@@ -767,11 +776,20 @@
         "id": 2,
         "likes": 0,
         "text": "Červenô jabĺčko v oblôčku mám\n\n1.\n\n[:Červenô jabĺčko v oblôčku mám,:]\n\n[:koho rada vidím, koho rada vidím,\n\ntomu ho dám, tomu ho dám.:]\n\n2.\n\n[:A ja ťa, Janíčko, najradšej mám,:]\n\n[:ja ti to červenô, ja ti to červenô,\n\njabĺčko dám, jabĺčko dám.:]\n\n3.\n\n[:A nielen jabĺčko môj Janíčko,:]\n\n[:ale od ľubosti, ale od ľubosti,\n\naj srdiečko, aj srdiečko.:]"
+      },
+      {
+        "creationTime": {
+          "_seconds": 1775909149,
+          "_nanoseconds": 941000000
+        },
+        "id": 3,
+        "likes": 1,
+        "text": "[:Červenô jabĺčko v oblôčku mám,:]\n[:koho rada vidím, koho rada vidím,\ntomu ho dám, tomu ho dám.:]\n\n[:A ja ťa, Janíčko, najradšej mám,:]\n[:ja ti to červenô, ja ti to červenô,\njabĺčko dám, jabĺčko dám.:]\n\nGúľalo sa, gúľalo, guľalo,\nto červenô jabĺčko,\n[:až sa ono zgúľalo, zgúľalo,\nku má milej ľahúčko.:]\n\nAk má milá rada máš, rada máš,\npredaj všetko čo len máš,\n[:predaj koňe, a i voz, a i voz,\na na chrbte drevo nos.:]"
       }
     ],
     "title": "Červenô jabĺčko v oblôčku mám",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 6
   },
   {
     "creationTime": {
@@ -2301,7 +2319,7 @@
     ],
     "title": "Jaj, Zuzička",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "creationTime": {

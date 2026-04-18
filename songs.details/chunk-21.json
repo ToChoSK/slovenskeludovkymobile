@@ -402,8 +402,8 @@
       "https://pesnicky.orava.sk/component/mjoosic/?view=song&id=1612"
     ],
     "nextSongs": [],
-    "obec": null,
-    "region": null,
+    "obec": "Východná",
+    "region": "Liptov",
     "textVersions": [
       {
         "creationTime": {
@@ -417,7 +417,7 @@
     ],
     "title": "Vychodna, vychodna",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 3
   },
   {
     "creationTime": {

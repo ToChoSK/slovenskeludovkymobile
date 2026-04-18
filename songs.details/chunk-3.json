@@ -1763,6 +1763,10 @@
       {
         "id": 2109,
         "likes": 1
+      },
+      {
+        "id": 6304,
+        "likes": 1
       }
     ],
     "obec": "Telgárt",
@@ -1774,13 +1778,13 @@
           "_nanoseconds": 0
         },
         "id": 1,
-        "likes": 1,
+        "likes": 2,
         "text": "Telgárt, Horehronie\n\n1.\n\nNa Telgárte hrajú, až čierna zem duní,\n\n[:spadla mi frajerka do hlbokej studni.:]\n\n2.\n\nPani muzikanti, už teľo nehrajte,\n\n[:aľe mi frajerku zo studni ťahajte.:]\n\n3.\n\nKeď ju vytiahnete, potom hrať budete,\n\n[:kúpim vám pálenky, keľo vypijete.:]"
       }
     ],
     "title": "Na Telgárte hrajú",
     "userAddedId": null,
-    "viewCount": 3
+    "viewCount": 9
   },
   {
     "creationTime": {

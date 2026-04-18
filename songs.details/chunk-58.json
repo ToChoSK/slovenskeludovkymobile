@@ -986,7 +986,7 @@
     ],
     "title": "Keby sa tá moja mladosť",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 2
   },
   {
     "creationTime": {
@@ -2737,7 +2737,7 @@
     ],
     "title": "Šofere, šofere",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "creationTime": {
@@ -3027,6 +3027,34 @@
     "title": "V tej Sekulskej doline",
     "userAddedId": null,
     "viewCount": 0
+  },
+  {
+    "creationTime": {
+      "_seconds": 1775907640,
+      "_nanoseconds": 80000000
+    },
+    "favoriteCount": 0,
+    "id": 51217,
+    "links": [
+      "https://www.youtube.com/watch?v=WXnEYgg0dik"
+    ],
+    "nextSongs": [],
+    "obec": null,
+    "region": "liptov",
+    "textVersions": [
+      {
+        "creationTime": {
+          "_seconds": 1775907638,
+          "_nanoseconds": 62000000
+        },
+        "id": 1,
+        "likes": 0,
+        "text": "1.\nPoďme spať , poďme spať do jednej postele, \n[: ja si na krajíček , ja si na krajíček a ty si ku stene :]\n2.\nJa si na krajíček , aby bol Janíček \n[: a ty si ku stene a ty si ku stene, veď obaja chceme :]"
+      }
+    ],
+    "title": "Poďme spať poďme spať do jednej postele",
+    "userAddedId": "54SPwZ5j80gfE3toP77wHR9QQci2",
+    "viewCount": 1
   },
   {
     "creationTime": {
@@ -5748,34 +5776,6 @@
       }
     ],
     "title": "Oj, chodila Marusina",
-    "userAddedId": null,
-    "viewCount": 0
-  },
-  {
-    "creationTime": {
-      "_seconds": 1774645240,
-      "_nanoseconds": 0
-    },
-    "favoriteCount": 0,
-    "id": 7743,
-    "links": [
-      "https://pesnicky.orava.sk/component/mjoosic/?view=song&id=7743"
-    ],
-    "nextSongs": [],
-    "obec": null,
-    "region": "Východ",
-    "textVersions": [
-      {
-        "creationTime": {
-          "_seconds": 1774645240,
-          "_nanoseconds": 0
-        },
-        "id": 1,
-        "likes": 0,
-        "text": "1.\n\nIšla moja maty na chlib zarabjaty,\n\nmene zochabila, mušu ju čekaty.\n\n[:Oj, mamičko, mamko, ej, trimajte mňa hladko,\n\nbo ja vam vyrostu, jak červene jabko.:]\n\n2.\n\nKebys mamko znala, jak ja furt plakala,\n\ncily dni i noči slzy uterala.\n\n[:Oj, mamičko, mamko, ej, trimajte mňa hladko,\n\nbo ja vam vyrostu, jak červene jabko.:]\n\n3.\n\nŽeby sja dospala, triba zarabjala,\n\ndovhy dni i noči solodko nespala.\n\n[:Oj, mamičko, mamko, ej, trimajte mňa hladko,\n\nbo ja vam vyrostu, jak červene jabko.:]\n\n4.\n\nMamko moja stara, ťažkos mňa chovala,\n\nza korunu, za dvi chlibas kupovala.\n\n[:Oj, mamičko, mamko, ej, trimajte mňa hladko,\n\nbo ja vam vyrostu, jak červene jabko.:]\n\n5.\n\nBodaj by sja na švit dity nerodily,\n\nza tot suchyj chlibok z domu nechodili.\n\n[:Oj, mamičko, mamko, ej, trimajte mňa hladko,\n\nbo ja vam vyrostu, jak červene jabko.:]"
-      }
-    ],
-    "title": "Išla moja maty",
     "userAddedId": null,
     "viewCount": 0
   }

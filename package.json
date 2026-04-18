@@ -1,6 +1,6 @@
 {
   "name": "slovenskeludovkymobile",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "packageManager": "pnpm@10.32.1",
   "main": "expo-router/entry",
@@ -10,6 +10,7 @@
     "prepare:song-data:local": "set \"SONG_DATA_SOURCE=local\" && node ./scripts/prepare-song-data.mjs",
     "update:preview": "eas update --channel preview",
     "update:production": "eas update --channel production",
+    "build:autosubmit":"eas build --platform android --profile production --auto-submit",
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",

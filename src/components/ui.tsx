@@ -14,6 +14,7 @@ export function Screen({
       ref={scrollRef}
       style={styles.screen}
       contentContainerStyle={styles.content}
+      keyboardShouldPersistTaps="handled"
       refreshControl={onRefresh ? <RefreshControl refreshing={refreshing ?? false} onRefresh={onRefresh} tintColor="#3b9ed8" /> : undefined}
     >
       {children}

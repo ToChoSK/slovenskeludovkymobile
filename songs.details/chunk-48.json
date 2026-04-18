@@ -4342,7 +4342,7 @@
     ],
     "title": "Na Kráľovej holi",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 4
   },
   {
     "creationTime": {
@@ -5028,7 +5028,7 @@
     ],
     "title": "Zašala ja do oblačka ľeľiju",
     "userAddedId": null,
-    "viewCount": 1
+    "viewCount": 2
   },
   {
     "creationTime": {
@@ -5108,7 +5108,7 @@
     ],
     "title": "A jaky ty parobek, taká i ja dzivka",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "creationTime": {
@@ -5118,7 +5118,12 @@
     "favoriteCount": 0,
     "id": 50009,
     "links": [],
-    "nextSongs": [],
+    "nextSongs": [
+      {
+        "id": 50016,
+        "likes": 0
+      }
+    ],
     "obec": "Čierny Balog",
     "region": "Pohronie",
     "textVersions": [
@@ -5134,7 +5139,7 @@
     ],
     "title": "Keď ma máte zabiť zabite ma v jarku",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "creationTime": {

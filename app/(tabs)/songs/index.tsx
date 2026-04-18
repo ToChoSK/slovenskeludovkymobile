@@ -94,7 +94,7 @@ export default function SongsScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingHorizontal: 2 }}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingHorizontal: 2 }} keyboardShouldPersistTaps="handled">
           <FilterChip
             label="Všetky"
             active={region === "all"}
@@ -139,6 +139,7 @@ export default function SongsScreen() {
     <FlatList
       style={{ flex: 1, backgroundColor: "#eef7fd" }}
       contentContainerStyle={{ paddingBottom: 140 }}
+      keyboardShouldPersistTaps="handled"
       data={rows}
       keyExtractor={(item) => String(item.id)}
       ListHeaderComponent={header}

@@ -1056,11 +1056,20 @@
         "id": 1,
         "likes": 0,
         "text": "1.\n\n[:Neďaleko od Trenčína, býva mladá Katarína. :]\n\n[:Čierne oči má, to musí byť má milá,\n\ntakú frajarečku chcem, čo má meno Katarína. :]\n\n2.\n\n[:My sme chlapci od dediny, milujeme Kataríny. :]\n\n[:Čierne ...\n\n3.\n\n[:Takú frajerku som dostal, ako by ju sám čert poslal. :]\n\n[:Čierne ...\n\n4.\n\n[:My sme chlapci od Žiliny, milujeme Katariny. :]\n\n[:Čierne ...\n\n5.\n\n[:Od Žiliny až po Tatry, milovanie jak sa patrí. :]\n\n[:Čierne ...\n\n6.\n\n[:Vyviedol ju na vrch Tatry, využil ju jak sa patrí. :]\n\n[:Čierne ...\n\n7.\n\n[:Katarína samopašná, čo si chcela, to si našla. :]\n\n[:Čierne ..."
+      },
+      {
+        "creationTime": {
+          "_seconds": 1776179267,
+          "_nanoseconds": 155000000
+        },
+        "id": 2,
+        "likes": 1,
+        "text": "[:Neďaleko od Trenčína, býva krásna Katarína. :]\n[:Čierne oči má, to musí byť má milá,\ntakú frajarečku chcem, čo má meno Katarína. :]\n\n[:My sme chlapci od dediny, milujeme Kataríny. :]\n[:Čierne oči má, to musí byť má milá,\ntakú frajarečku chcem, čo má meno Katarína. :]\n\n[:Takú frajerku som dostal, čo by mi ju sám čert poslal. :]\n[:Čierne oči má, to musí byť má milá,\ntakú frajarečku chcem, čo má meno Katarína. :]"
       }
     ],
     "title": "Neďaleko od Trenčína",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "creationTime": {
@@ -4891,7 +4900,7 @@
     ],
     "title": "Oči, oči, čierne oči",
     "userAddedId": null,
-    "viewCount": 4
+    "viewCount": 6
   },
   {
     "creationTime": {

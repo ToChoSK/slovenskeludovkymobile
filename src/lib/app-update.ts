@@ -52,6 +52,8 @@ export async function loadMobileAppUpdatePrompt(): Promise<MobileAppUpdatePrompt
 
   const installedVersion = getInstalledAppVersion()
   const latestVersion = platformConfig.latestVersion
+  if (compareVersions(latestVersion, installedVersion) <= 0) return null
+
   const minSupportedVersion = platformConfig.minSupportedVersion ?? null
   return {
     storeUrl: platformConfig.storeUrl,

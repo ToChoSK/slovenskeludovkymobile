@@ -261,9 +261,14 @@
     "links": [
       "https://pesnicky.orava.sk/component/mjoosic/?view=song&id=508"
     ],
-    "nextSongs": [],
+    "nextSongs": [
+      {
+        "id": 997,
+        "likes": 1
+      }
+    ],
     "obec": null,
-    "region": null,
+    "region": "slovensko",
     "textVersions": [
       {
         "creationTime": {
@@ -275,9 +280,9 @@
         "text": "1.\n\nNa tej Detve studňa murovaná,\n\n[:na tej Detve studňa murovaná\n\npri nej sedí milá uplakaná.:]\n\n2.\n\nSedí, sedí, rúčky zalamuje,\n\n[:sedí, sedí rúčky zalamuje,\n\nže jej milý na vojnu rukuje.:]\n\n3.\n\nNeplač milá nezalamuj rúčky\n\n[:neplač milá nezalamuj rúčky,\n\nvšak ja prídem o dva o tri rôčky.:]"
       }
     ],
-    "title": "Na tej Detve",
+    "title": "Na tej Detve studňa murovaná",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 2
   },
   {
     "creationTime": {
@@ -659,7 +664,7 @@
     ],
     "title": "Na tom mosťe",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "creationTime": {

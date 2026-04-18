@@ -1813,7 +1813,7 @@
     "obec": null,
     "region": "Liptov",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 6
   },
   {
     "id": 10516,
@@ -2245,7 +2245,7 @@
     "obec": null,
     "region": "Hont",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 10606,
@@ -4627,9 +4627,9 @@
     "id": 11337,
     "title": "A poňiže Prešova stojí ľipka žeľena",
     "obec": null,
-    "region": null,
+    "region": "saris",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 5
   },
   {
     "id": 11339,
@@ -5269,7 +5269,7 @@
     "obec": "Telgárt",
     "region": "Horehronie",
     "favoriteCount": 0,
-    "viewCount": 3
+    "viewCount": 9
   },
   {
     "id": 11622,
@@ -11701,7 +11701,7 @@
     "obec": "Liptovská Lužna",
     "region": "Liptov",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 2
   },
   {
     "id": 13289,
@@ -17013,7 +17013,7 @@
     "obec": null,
     "region": "Východ",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 13936,
@@ -20523,9 +20523,9 @@
     "id": 14382,
     "title": "Ked ja žala pod jedľinu",
     "obec": null,
-    "region": "Východ",
+    "region": "Šariš",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 3
   },
   {
     "id": 14383,
@@ -23157,7 +23157,7 @@
     "obec": null,
     "region": "Šariš",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 14763,
@@ -26525,7 +26525,7 @@
     "obec": null,
     "region": "Spiš",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 15253,
@@ -32529,11 +32529,11 @@
   },
   {
     "id": 15974,
-    "title": "Poďme spať, poďme spať",
+    "title": "Poďme spať, poďme spať, už je k polnoci",
     "obec": null,
-    "region": null,
+    "region": "slovensko",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 2
   },
   {
     "id": 15975,
@@ -33714,10 +33714,10 @@
   {
     "id": 1612,
     "title": "Vychodna, vychodna",
-    "obec": null,
-    "region": null,
+    "obec": "Východná",
+    "region": "Liptov",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 3
   },
   {
     "id": 16120,
@@ -40981,7 +40981,7 @@
     "obec": null,
     "region": "Východ",
     "favoriteCount": 0,
-    "viewCount": 1
+    "viewCount": 2
   },
   {
     "id": 170,
@@ -44605,7 +44605,7 @@
     "obec": null,
     "region": "Východ",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 1750,
@@ -46045,7 +46045,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 1781,
@@ -59161,11 +59161,11 @@
   },
   {
     "id": 19416,
-    "title": "Gúľalo sa, gúľalo, guľalo",
+    "title": "Gúľalo sa, gúľalo, guľalo to červenô jabĺčko",
     "obec": null,
-    "region": null,
+    "region": "liptov",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 10
   },
   {
     "id": 19417,
@@ -59701,7 +59701,7 @@
     "obec": "Brezová pod Bradlom",
     "region": "Myjava",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 19486,
@@ -61229,7 +61229,7 @@
     "obec": "Bohdanovce",
     "region": "Abov",
     "favoriteCount": 0,
-    "viewCount": 2
+    "viewCount": 5
   },
   {
     "id": 51166,
@@ -62181,7 +62181,7 @@
     "obec": null,
     "region": "horehronie",
     "favoriteCount": 0,
-    "viewCount": 18
+    "viewCount": 41
   },
   {
     "id": 211,
@@ -64749,7 +64749,7 @@
     "obec": null,
     "region": "Rusínské a ukrajinské",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 2603,
@@ -65597,7 +65597,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 2741,
@@ -66067,9 +66067,9 @@
     "id": 287,
     "title": "Išli dievky ľan trhať",
     "obec": null,
-    "region": null,
+    "region": "liptov",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 3
   },
   {
     "id": 2870,
@@ -67269,7 +67269,7 @@
     "obec": "Kokava nad Rimavicou",
     "region": "malohont",
     "favoriteCount": 0,
-    "viewCount": 3
+    "viewCount": 9
   },
   {
     "id": 3091,
@@ -67397,7 +67397,7 @@
     "obec": null,
     "region": "Východ",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 3119,
@@ -67933,7 +67933,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 3251,
@@ -72245,7 +72245,7 @@
     "obec": "Habura",
     "region": "zemplin",
     "favoriteCount": 0,
-    "viewCount": 1
+    "viewCount": 2
   },
   {
     "id": 50090,
@@ -72269,7 +72269,7 @@
     "obec": null,
     "region": "Východ",
     "favoriteCount": 0,
-    "viewCount": 1
+    "viewCount": 2
   },
   {
     "id": 40,
@@ -74565,7 +74565,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 4436,
@@ -75093,7 +75093,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 4498,
@@ -78005,7 +78005,7 @@
     "obec": null,
     "region": "Horehronie",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 4
   },
   {
     "id": 4970,
@@ -78197,7 +78197,7 @@
     "obec": "Margecany",
     "region": "Spiš",
     "favoriteCount": 0,
-    "viewCount": 1
+    "viewCount": 2
   },
   {
     "id": 51073,
@@ -78221,7 +78221,7 @@
     "obec": "Raslavice",
     "region": "Šariš",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 50009,
@@ -78229,7 +78229,7 @@
     "obec": "Čierny Balog",
     "region": "Pohronie",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 51038,
@@ -78473,11 +78473,11 @@
   },
   {
     "id": 508,
-    "title": "Na tej Detve",
+    "title": "Na tej Detve studňa murovaná",
     "obec": null,
-    "region": null,
+    "region": "slovensko",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 2
   },
   {
     "id": 5080,
@@ -78581,7 +78581,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 5100,
@@ -80293,7 +80293,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 5361,
@@ -81349,7 +81349,7 @@
     "obec": null,
     "region": "pohronie",
     "favoriteCount": 1,
-    "viewCount": 4
+    "viewCount": 6
   },
   {
     "id": 5583,
@@ -84853,7 +84853,7 @@
     "obec": null,
     "region": "Východ",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 6254,
@@ -85285,7 +85285,7 @@
     "obec": null,
     "region": "Horehronie",
     "favoriteCount": 0,
-    "viewCount": 1
+    "viewCount": 2
   },
   {
     "id": 6304,
@@ -85293,7 +85293,7 @@
     "obec": "Telgárt",
     "region": "Horehronie",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 6305,
@@ -88301,7 +88301,7 @@
     "obec": null,
     "region": "Východ",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 2
   },
   {
     "id": 6778,
@@ -89093,7 +89093,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 6901,
@@ -93077,7 +93077,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 2
   },
   {
     "id": 7535,
@@ -93549,7 +93549,7 @@
     "obec": null,
     "region": "Východ",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 7590,
@@ -93630,6 +93630,14 @@
     "region": null,
     "favoriteCount": 0,
     "viewCount": 0
+  },
+  {
+    "id": 51217,
+    "title": "Poďme spať poďme spať do jednej postele",
+    "obec": null,
+    "region": "liptov",
+    "favoriteCount": 0,
+    "viewCount": 1
   },
   {
     "id": 76,
@@ -94581,7 +94589,7 @@
     "obec": null,
     "region": "Východ",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 2
   },
   {
     "id": 7767,
@@ -95949,7 +95957,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 8067,
@@ -97349,7 +97357,7 @@
     "obec": null,
     "region": null,
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 8440,
@@ -97755,9 +97763,9 @@
     "id": 857,
     "title": "Včera mi svietilo slniečko / Fčera mi śvicilo slunečko",
     "obec": null,
-    "region": "zemplin",
+    "region": "Východ",
     "favoriteCount": 1,
-    "viewCount": 6
+    "viewCount": 10
   },
   {
     "id": 8571,
@@ -98138,14 +98146,6 @@
   {
     "id": 866,
     "title": "Varila jem varila",
-    "obec": null,
-    "region": null,
-    "favoriteCount": 0,
-    "viewCount": 0
-  },
-  {
-    "id": 868,
-    "title": "Včera večer, včera",
     "obec": null,
     "region": null,
     "favoriteCount": 0,
@@ -98645,7 +98645,7 @@
     "obec": null,
     "region": "Liptov",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 8870,
@@ -99021,7 +99021,7 @@
     "obec": "Fintice",
     "region": "saris",
     "favoriteCount": 0,
-    "viewCount": 2
+    "viewCount": 3
   },
   {
     "id": 50077,
@@ -100973,7 +100973,7 @@
     "obec": null,
     "region": "Zemplín",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 977,
@@ -101005,7 +101005,7 @@
     "obec": null,
     "region": "Liptov",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 980,
@@ -101245,7 +101245,7 @@
     "obec": null,
     "region": "Podpoľanie",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 9970,
@@ -101461,7 +101461,7 @@
     "obec": "Čiko čardáš",
     "region": "Zemplín",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 51054,
@@ -101741,7 +101741,7 @@
     "obec": null,
     "region": "Podunajsko",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 51092,
@@ -102173,7 +102173,7 @@
     "obec": "Jarabina",
     "region": "spis",
     "favoriteCount": 0,
-    "viewCount": 7
+    "viewCount": 8
   },
   {
     "id": 51006,
@@ -102213,7 +102213,7 @@
     "obec": "Margecany",
     "region": "Spiš",
     "favoriteCount": 0,
-    "viewCount": 1
+    "viewCount": 2
   },
   {
     "id": 50099,
@@ -102235,9 +102235,9 @@
     "id": 51213,
     "title": "Tu kukučku v tom hajičku",
     "obec": "Rejdová",
-    "region": "gemer",
+    "region": "Gemer",
     "favoriteCount": 0,
-    "viewCount": 2
+    "viewCount": 6
   },
   {
     "id": 50093,
@@ -102315,9 +102315,9 @@
     "id": 51098,
     "title": "Moja ľuba veśelosc",
     "obec": "Bystrany",
-    "region": "Spiš",
+    "region": "",
     "favoriteCount": 0,
-    "viewCount": 4
+    "viewCount": 15
   },
   {
     "id": 51021,
@@ -102387,9 +102387,9 @@
     "id": 50016,
     "title": "Včera večer včera",
     "obec": "Čierny Balog",
-    "region": "",
+    "region": "pohronie",
     "favoriteCount": 0,
-    "viewCount": 3
+    "viewCount": 9
   },
   {
     "id": 51078,
@@ -102475,9 +102475,9 @@
     "id": 51133,
     "title": "Fčera večar nasnovala",
     "obec": "Hrabkov",
-    "region": "",
+    "region": "saris",
     "favoriteCount": 0,
-    "viewCount": 2
+    "viewCount": 5
   },
   {
     "id": 51088,
@@ -102573,7 +102573,7 @@
     "obec": "Habura",
     "region": "zemplin",
     "favoriteCount": 0,
-    "viewCount": 1
+    "viewCount": 4
   },
   {
     "id": 51203,
@@ -102621,7 +102621,7 @@
     "obec": "Bystrany",
     "region": "Spiš",
     "favoriteCount": 0,
-    "viewCount": 3
+    "viewCount": 4
   },
   {
     "id": 51066,
@@ -102661,7 +102661,7 @@
     "obec": "Čiko čardáš",
     "region": "Zemplín",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 51109,
@@ -102752,6 +102752,14 @@
     "viewCount": 0
   },
   {
+    "id": 51220,
+    "title": "Mamko moja mamko srdce sa mi zamkuo",
+    "obec": "Važec",
+    "region": "liptov",
+    "favoriteCount": 0,
+    "viewCount": 1
+  },
+  {
     "id": 51145,
     "title": "Široká dunajská voda",
     "obec": null,
@@ -102813,7 +102821,7 @@
     "obec": "Hrabkov",
     "region": "saris",
     "favoriteCount": 0,
-    "viewCount": 3
+    "viewCount": 5
   },
   {
     "id": 50048,
@@ -102829,7 +102837,7 @@
     "obec": "Telgárt",
     "region": "Horehronie",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 51158,
@@ -102909,7 +102917,7 @@
     "obec": null,
     "region": "Zemplín",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 2
   },
   {
     "id": 19634,
@@ -102925,7 +102933,7 @@
     "obec": "Hrabkov",
     "region": "saris",
     "favoriteCount": 0,
-    "viewCount": 2
+    "viewCount": 5
   },
   {
     "id": 50105,
@@ -102949,7 +102957,7 @@
     "obec": "Bystrany",
     "region": "Spiš",
     "favoriteCount": 0,
-    "viewCount": 1
+    "viewCount": 2
   },
   {
     "id": 50064,
@@ -102997,7 +103005,7 @@
     "obec": "Fintice",
     "region": "Šariš",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 4
   },
   {
     "id": 50065,
@@ -103232,12 +103240,28 @@
     "viewCount": 0
   },
   {
+    "id": 51218,
+    "title": "Ani bi ja neveriua že bi lubosť tak škodziua",
+    "obec": "Východná",
+    "region": "liptov",
+    "favoriteCount": 0,
+    "viewCount": 2
+  },
+  {
     "id": 50101,
     "title": "Prišli mi noviny z talianskej krajiny",
     "obec": "Čierny Balog",
     "region": "Pohronie",
     "favoriteCount": 0,
     "viewCount": 0
+  },
+  {
+    "id": 51219,
+    "title": "Ani bi ja neveriua",
+    "obec": "Východná",
+    "region": "liptov",
+    "favoriteCount": 0,
+    "viewCount": 5
   },
   {
     "id": 50100,
@@ -103291,9 +103315,9 @@
     "id": 51131,
     "title": "Hoja tebe hoja tebe hoja i mňe",
     "obec": "Hrabkov",
-    "region": "",
+    "region": "saris",
     "favoriteCount": 0,
-    "viewCount": 2
+    "viewCount": 9
   },
   {
     "id": 51129,
@@ -103325,7 +103349,7 @@
     "obec": "Hrabkov",
     "region": "",
     "favoriteCount": 0,
-    "viewCount": 3
+    "viewCount": 5
   },
   {
     "id": 51010,
@@ -103357,7 +103381,7 @@
     "obec": "Hrabkov",
     "region": "saris",
     "favoriteCount": 0,
-    "viewCount": 2
+    "viewCount": 5
   },
   {
     "id": 51142,
@@ -103421,7 +103445,7 @@
     "obec": "Čiko čardáš",
     "region": "Zemplín",
     "favoriteCount": 0,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "id": 50034,
@@ -103453,7 +103477,7 @@
     "obec": "Čierny Balog",
     "region": "Pohronie",
     "favoriteCount": 0,
-    "viewCount": 2
+    "viewCount": 5
   },
   {
     "id": 51093,
@@ -103501,7 +103525,7 @@
     "obec": "Fintice",
     "region": "Šariš",
     "favoriteCount": 0,
-    "viewCount": 2
+    "viewCount": 3
   },
   {
     "id": 51192,

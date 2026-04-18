@@ -193,7 +193,7 @@
     ],
     "title": "Stracila ja pacerki",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "creationTime": {
@@ -1728,7 +1728,7 @@
     ],
     "title": "Kodi toto žitko ziďe",
     "userAddedId": null,
-    "viewCount": 1
+    "viewCount": 2
   },
   {
     "creationTime": {
@@ -1740,7 +1740,12 @@
     "links": [
       "https://pesnicky.orava.sk/component/mjoosic/?view=song&id=6304"
     ],
-    "nextSongs": [],
+    "nextSongs": [
+      {
+        "id": 50009,
+        "likes": 0
+      }
+    ],
     "obec": "Telgárt",
     "region": "Horehronie",
     "textVersions": [
@@ -1765,7 +1770,7 @@
     ],
     "title": "Povedala moja milá",
     "userAddedId": null,
-    "viewCount": 0
+    "viewCount": 1
   },
   {
     "creationTime": {

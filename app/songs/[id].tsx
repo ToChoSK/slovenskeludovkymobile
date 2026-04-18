@@ -4,6 +4,7 @@ import { Stack, router, useLocalSearchParams } from "expo-router"
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react"
 import { Alert, Linking, Pressable, Text, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
+import { AppBottomNav } from "@/components/AppBottomNav"
 import { useHasPrivilege } from "@/lib/privileges"
 import { REGION_META, resolveRegionKey } from "@/lib/regions"
 import { normalizeSearchText } from "@/lib/search"
@@ -340,7 +341,8 @@ export default function SongDetailScreen() {
   const regionColor = regionMeta.color
 
   return (
-    <Screen>
+    <View style={{ flex: 1 }}>
+      <Screen>
       <Stack.Screen
         options={{
           headerLeft: () => (
@@ -560,7 +562,9 @@ export default function SongDetailScreen() {
           ))}
         </Card>
       ) : null}
-    </Screen>
+      </Screen>
+      <AppBottomNav />
+    </View>
   )
 }
 

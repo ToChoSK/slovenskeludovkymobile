@@ -114,7 +114,7 @@ export default function SearchScreen() {
 
   if (loading) {
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: "#f4fbff" }} contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 140 }}>
+      <ScrollView style={{ flex: 1, backgroundColor: "#f4fbff" }} contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 140 }} keyboardShouldPersistTaps="handled">
         <Card>
           <Loading label="Načítavam katalóg piesní..." />
         </Card>
@@ -128,7 +128,7 @@ export default function SearchScreen() {
   const showQuickAccess = !hasQuery
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#f4fbff" }} contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 140 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#f4fbff" }} contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 140 }} keyboardShouldPersistTaps="handled">
       <OnboardingOverlay />
 
       {appUpdatePrompt ? (

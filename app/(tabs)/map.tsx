@@ -20,16 +20,16 @@ export default function MapScreen() {
   return (
     <Screen scrollRef={scrollRef}>
       <HeroCard>
-        <Text style={{ fontSize: 30, lineHeight: 34, color: "#f4fbff", fontWeight: "900" }}>Mapa regionov</Text>
+        <Text style={{ fontSize: 30, lineHeight: 34, color: "#f4fbff", fontWeight: "900" }}>Mapa regiónov</Text>
         <Text style={{ fontSize: 15, lineHeight: 22, color: "rgba(235,248,255,0.82)" }}>
-          Vyber si región priamo z mapy. Ďalším klepnutím na rovnaký región sa výber zruší.
+          Vyber si región a otvor si zoznam piesní z danej oblasti.
         </Text>
       </HeroCard>
 
       <Card>
         <View style={{ gap: 4 }}>
           <Text style={{ fontSize: 12, fontWeight: "800", color: "#2b7fb9", letterSpacing: 1.1, textTransform: "uppercase" }}>Interaktívna mapa</Text>
-          <Subtle>Klepnutie na mapu len prepína vybraný región. Filtrovanie sa nespúšťa automaticky.</Subtle>
+          <Subtle>Klepni na výber regiónu nižšie a potom na zobraziť všetky piesne.</Subtle>
         </View>
         <SlovakiaMap
           metadata={metadata}
